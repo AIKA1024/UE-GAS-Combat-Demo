@@ -1,0 +1,24 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
+#include "GameFramework/PlayerState.h"
+#include "FT_PlayerState.generated.h"
+
+class UFT_AttributeSet;
+
+UCLASS()
+class FIRST_API AFT_PlayerState : public APlayerState,public IAbilitySystemInterface
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	TObjectPtr<UFT_AttributeSet> AttributeSet;
+	
+	UPROPERTY(VisibleAnywhere,Category="First|Ability")
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+	AFT_PlayerState();
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+};
