@@ -14,14 +14,13 @@ class FIRST_API AFT_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(EditDefaultsOnly, Category="First|Input")
-	TArray<TObjectPtr<UInputMappingContext>> InputMappingContexts;
-
 protected:
 	virtual void SetupInputComponent() override;
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category="First|Input")
+    	TArray<TObjectPtr<UInputMappingContext>> InputMappingContexts;
+	
 	UPROPERTY(EditDefaultsOnly, Category="First|Input|Movement")
 	TObjectPtr<UInputAction> JumpAction;
 

@@ -3,19 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "FT_BaseCharacter.generated.h"
 
+class UGameplayAbility;
+
 UCLASS()
-class FIRST_API AFT_BaseCharacter : public ACharacter
+class FIRST_API AFT_BaseCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
 	AFT_BaseCharacter();
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
 protected:
-	virtual void BeginPlay() override;
+	void GiveStartupAbilities();
+	
+private:
+	UPROPERTY(EditDefaultsOnly)
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 };

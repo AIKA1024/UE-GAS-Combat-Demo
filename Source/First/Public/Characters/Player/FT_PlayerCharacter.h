@@ -14,6 +14,8 @@ class FIRST_API AFT_PlayerCharacter : public AFT_BaseCharacter
 
 public:
 	AFT_PlayerCharacter();
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual void PossessedBy(AController* NewController) override;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category=Camera)

@@ -1,32 +1,28 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "First/Public/Characters/FT_BaseCharacter.h"
 
+#include "AbilitySystemComponent.h"
+#include "GameplayAbilitySpec.h"
 
-// Sets default values
 AFT_BaseCharacter::AFT_BaseCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
-void AFT_BaseCharacter::BeginPlay()
+UAbilitySystemComponent* AFT_BaseCharacter::GetAbilitySystemComponent() const
 {
-	Super::BeginPlay();
-	
+	return nullptr;
 }
 
-// Called every frame
-void AFT_BaseCharacter::Tick(float DeltaTime)
+void AFT_BaseCharacter::GiveStartupAbilities()
 {
-	Super::Tick(DeltaTime);
-}
+	if (!GetAbilitySystemComponent())
+		return;
 
-// Called to bind functionality to input
-void AFT_BaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	for (const auto& Ability : StartupAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec(Ability);
+		GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
+	}
 }
 

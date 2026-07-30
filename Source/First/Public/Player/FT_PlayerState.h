@@ -5,6 +5,7 @@
 #include "GameFramework/PlayerState.h"
 #include "FT_PlayerState.generated.h"
 
+class UFT_AbilitySystemComponent;
 class UFT_AttributeSet;
 
 UCLASS()
@@ -17,7 +18,7 @@ public:
 	TObjectPtr<UFT_AttributeSet> AttributeSet;
 	
 	UPROPERTY(VisibleAnywhere,Category="First|Ability")
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<UFT_AbilitySystemComponent> AbilitySystemComponent;
 
 	AFT_PlayerState();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;

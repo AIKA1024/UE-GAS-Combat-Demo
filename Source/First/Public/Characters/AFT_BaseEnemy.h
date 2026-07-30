@@ -6,23 +6,19 @@
 #include "FT_BaseCharacter.h"
 #include "AFT_BaseEnemy.generated.h"
 
+class UFT_AbilitySystemComponent;
+
 UCLASS()
-class FIRST_API AAFT_BaseEnemy : public AFT_BaseCharacter
+class FIRST_API AFT_BaseEnemy : public AFT_BaseCharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	AAFT_BaseEnemy();
-
-protected:
-	// Called when the game starts or when spawned
+	AFT_BaseEnemy();
 	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
+private:
+	UPROPERTY(VisibleAnywhere,Category="First|Ability")
+	TObjectPtr<UFT_AbilitySystemComponent> AbilitySystemComponent;
 };

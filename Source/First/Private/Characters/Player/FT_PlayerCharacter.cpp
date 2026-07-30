@@ -1,13 +1,15 @@
 #include "First/Public/Characters/Player/FT_PlayerCharacter.h"
 
+#include "AbilitySystem/FT_AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Player/FT_PlayerState.h"
 
 AFT_PlayerCharacter::AFT_PlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
@@ -17,7 +19,7 @@ AFT_PlayerCharacter::AFT_PlayerCharacter()
 		MoveComp->bOrientRotationToMovement = true;
 		MoveComp->RotationRate = FRotator(0.f, 540.f, 0.f);
 	}
-	
+
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(FName("CameraBoom"));
 	CameraBoom->bUsePawnControlRotation = true;
 	CameraBoom->SetupAttachment(RootComponent);
@@ -25,3 +27,17 @@ AFT_PlayerCharacter::AFT_PlayerCharacter()
 	FollowCamera->SetupAttachment(CameraBoom);
 }
 
+UAbilitySystemComponent* AFT_PlayerCharacter::GetAbilitySystemComponent() const
+{
+	const AFT_PlayerState* FTPlayerState = Cast<AFT_PlayerState>(GetPlayerState());
+	if (!FTPlayerState) return nullptr;
+	
+	return FTPlayerState->AbilitySystemComponent;
+}
+
+void AFT_PlayerCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(),this);
+	GiveStartupAbilities();
+}

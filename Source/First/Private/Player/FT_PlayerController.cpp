@@ -1,9 +1,13 @@
 #include "First/Public/Player/FT_PlayerController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/Character.h"
+#include "GamePlayTags/FTTag.h"
 
+class UAbilitySystemComponent;
 class UEnhancedInputLocalPlayerSubsystem;
 
 void AFT_PlayerController::SetupInputComponent()
@@ -61,12 +65,19 @@ void AFT_PlayerController::Look(const FInputActionValue& Value)
 
 void AFT_PlayerController::Primary()
 {
+	ActivateAbility(FTTag::Abilities::Primary);
 }
 
 void AFT_PlayerController::Secondary()
 {
+	ActivateAbility(FTTag::Abilities::Secondary);
 }
 
 void AFT_PlayerController::ActivateAbility(const FGameplayTag& AbilityTag) const
 {
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
+	if (!ASC || ASC->HasMatchingGameplayTag(FTTag::Status::Dead))
+		return;
+
+	ASC->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());
 }
