@@ -26,6 +26,14 @@ namespace FTTag
 		namespace Player
 		{
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(PrimaryTraceHit, "FFTag.Event.Player.PrimaryTraceHit", "Tag for the PrimaryTraceHit of Player")
+			namespace Attack
+			{
+				namespace ComboWindow
+				{
+					UE_DEFINE_GAMEPLAY_TAG_COMMENT(Open,"FFTag.Event.Player.Attack.ComboWindow.Open", "Tag for the ComboWindow Open")
+					UE_DEFINE_GAMEPLAY_TAG_COMMENT(Close,"FFTag.Event.Player.Attack.ComboWindow.Close", "Tag for the ComboWindow Close")
+				}
+			}
 		}
 	}
 }

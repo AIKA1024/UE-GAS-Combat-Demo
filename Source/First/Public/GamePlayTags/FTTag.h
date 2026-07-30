@@ -25,6 +25,14 @@ namespace FTTag
 	{
 		namespace Player
 		{
+			namespace Attack
+			{
+				namespace ComboWindow
+				{
+					UE_DECLARE_GAMEPLAY_TAG_EXTERN(Open)
+					UE_DECLARE_GAMEPLAY_TAG_EXTERN(Close)
+				}
+			}
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(PrimaryTraceHit)
 		}
 	}
