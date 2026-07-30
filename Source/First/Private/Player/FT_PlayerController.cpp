@@ -2,6 +2,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework/Character.h"
 
 class UEnhancedInputLocalPlayerSubsystem;
 
@@ -31,14 +32,23 @@ void AFT_PlayerController::SetupInputComponent()
 
 void AFT_PlayerController::Jump()
 {
+	GetCharacter()->Jump();
 }
 
 void AFT_PlayerController::StopJumping()
 {
+	GetCharacter()->StopJumping();
 }
 
 void AFT_PlayerController::Move(const FInputActionValue& Value)
 {
+	const FVector2D MovementVector = Value.Get<FVector2D>();
+	const FRotator YawRotation(0.f, GetControlRotation().Yaw, 0.f);
+	const FVector ForwardVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+	GetPawn()->AddMovementInput(ForwardVector, MovementVector.Y);
+	GetPawn()->AddMovementInput(RightVector, MovementVector.X);
 }
 
 void AFT_PlayerController::Look(const FInputActionValue& Value)
