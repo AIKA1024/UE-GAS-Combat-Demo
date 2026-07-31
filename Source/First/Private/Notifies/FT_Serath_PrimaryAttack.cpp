@@ -13,6 +13,8 @@ void UFT_Serath_PrimaryAttack::NotifyTick(USkeletalMeshComponent* MeshComp, UAni
                                           float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);
+	const auto HitResults = PerformSphereTrace(MeshComp);
+	SendEventToActors(HitResults, MeshComp);
 }
 
 TArray<FHitResult> UFT_Serath_PrimaryAttack::PerformSphereTrace(USkeletalMeshComponent* MeshComp) const
