@@ -24,7 +24,7 @@ private:
 	TArray<FHitResult> PerformSphereTrace(USkeletalMeshComponent* MeshComp) const;
 	static void SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp);
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Crash|Debugs", meta=(AllowPrivateAccess=true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="First|Debugs", meta=(AllowPrivateAccess=true))
 	bool bDrawDebug{false};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess=true))

@@ -25,7 +25,7 @@ void AFT_PlayerController::SetupInputComponent()
 
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 	if (!EnhancedInputComponent) return;
-	
+
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ThisClass::Jump);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ThisClass::StopJumping);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
@@ -66,11 +66,15 @@ void AFT_PlayerController::Look(const FInputActionValue& Value)
 void AFT_PlayerController::Primary()
 {
 	ActivateAbility(FTTag::Abilities::Primary);
+	if (bCanPerInput)
+		PerInputTag = FTTag::Abilities::Primary;
 }
 
 void AFT_PlayerController::Secondary()
 {
 	ActivateAbility(FTTag::Abilities::Secondary);
+	if (bCanPerInput)
+		PerInputTag = FTTag::Abilities::Secondary;
 }
 
 void AFT_PlayerController::ActivateAbility(const FGameplayTag& AbilityTag) const

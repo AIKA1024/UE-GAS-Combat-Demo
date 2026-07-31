@@ -7,7 +7,6 @@ void UFT_ComboWindow::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenc
                                   const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
-
 	const FGameplayTag ComboWindowTag = FTTag::Window::Combo;
 	UAbilitySystemBlueprintLibrary::AddLooseGameplayTags(MeshComp->GetOwner(), ComboWindowTag.GetSingleTagContainer());
 }

@@ -14,13 +14,20 @@ class FIRST_API AFT_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bCanPerInput;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FGameplayTag PerInputTag;
+
 protected:
 	virtual void SetupInputComponent() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category="First|Input")
-    	TArray<TObjectPtr<UInputMappingContext>> InputMappingContexts;
-	
+	TArray<TObjectPtr<UInputMappingContext>> InputMappingContexts;
+
 	UPROPERTY(EditDefaultsOnly, Category="First|Input|Movement")
 	TObjectPtr<UInputAction> JumpAction;
 
@@ -29,13 +36,13 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="First|Input|Movement")
 	TObjectPtr<UInputAction> LookAction;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category="First|Input|Abilities")
 	TObjectPtr<UInputAction> PrimaryAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="First|Input|Abilities")
 	TObjectPtr<UInputAction> SecondaryAction;
-	
+
 	void Jump();
 	void StopJumping();
 	void Move(const FInputActionValue& Value);
