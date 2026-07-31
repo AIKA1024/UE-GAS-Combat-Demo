@@ -1,10 +1,10 @@
-#include "Notifies/FT_PerInputWindow.h"
+#include "Notifies/FT_PerInputWindowState.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "NativeGameplayTags.h"
 #include "Player/FT_PlayerController.h"
 
 ///UFT_PerInputWindow在动画中结尾时必须已经进入ComboWindow
-void UFT_PerInputWindow::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+void UFT_PerInputWindowState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                      float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
@@ -16,7 +16,7 @@ void UFT_PerInputWindow::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequ
 	}
 }
 
-void UFT_PerInputWindow::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+void UFT_PerInputWindowState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);

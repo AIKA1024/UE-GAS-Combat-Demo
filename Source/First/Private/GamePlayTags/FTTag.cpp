@@ -24,6 +24,7 @@ namespace FTTag
 
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Primary, "FFTag.Abilities.Primary", "Tag for the Primary Ability")
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Secondary, "FFTag.Abilities.Secondary", "Tag for the Secondary Ability")
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Roll, "FFTag.Abilities.Roll", "Tag for the Roll Ability")
 
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Death, "FFTag.Abilities.Death", "Tag for the Death Ability")
 	}

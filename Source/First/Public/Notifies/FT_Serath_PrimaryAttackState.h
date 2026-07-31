@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
-#include "FT_Serath_PrimaryAttack.generated.h"
+#include "FT_Serath_PrimaryAttackState.generated.h"
 
 UCLASS()
-class FIRST_API UFT_Serath_PrimaryAttack : public UAnimNotifyState
+class FIRST_API UFT_Serath_PrimaryAttackState : public UAnimNotifyState
 {
 	GENERATED_BODY()
 

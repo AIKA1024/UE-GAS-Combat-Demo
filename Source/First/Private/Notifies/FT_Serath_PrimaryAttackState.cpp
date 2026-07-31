@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Notifies/FT_Serath_PrimaryAttack.h"
+#include "Notifies/FT_Serath_PrimaryAttackState.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
@@ -9,7 +9,7 @@
 #include "Characters/Player/FT_PlayerCharacter.h"
 #include "GamePlayTags/FTTag.h"
 
-void UFT_Serath_PrimaryAttack::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+void UFT_Serath_PrimaryAttackState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                           float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);
@@ -17,7 +17,7 @@ void UFT_Serath_PrimaryAttack::NotifyTick(USkeletalMeshComponent* MeshComp, UAni
 	SendEventToActors(HitResults, MeshComp);
 }
 
-TArray<FHitResult> UFT_Serath_PrimaryAttack::PerformSphereTrace(USkeletalMeshComponent* MeshComp) const
+TArray<FHitResult> UFT_Serath_PrimaryAttackState::PerformSphereTrace(USkeletalMeshComponent* MeshComp) const
 {
 	const FTransform SocketTransform = MeshComp->GetSocketTransform(SocketName);
 	const FVector Start = SocketTransform.GetLocation();
@@ -54,7 +54,7 @@ TArray<FHitResult> UFT_Serath_PrimaryAttack::PerformSphereTrace(USkeletalMeshCom
 	return OutHits;
 }
 
-void UFT_Serath_PrimaryAttack::SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp)
+void UFT_Serath_PrimaryAttackState::SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp)
 {
 	if (!IsValid(MeshComp))
 		return;

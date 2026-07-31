@@ -30,6 +30,7 @@ void AFT_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ThisClass::StopJumping);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
+	EnhancedInputComponent->BindAction(RollAction, ETriggerEvent::Started, this, &ThisClass::Roll);
 	EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Started, this, &ThisClass::Primary);
 	EnhancedInputComponent->BindAction(SecondaryAction, ETriggerEvent::Started, this, &ThisClass::Secondary);
 }
@@ -61,6 +62,14 @@ void AFT_PlayerController::Look(const FInputActionValue& Value)
 
 	AddYawInput(LookAxisVector.X);
 	AddPitchInput(LookAxisVector.Y);
+}
+
+void AFT_PlayerController::Roll()
+{
+	ActivateAbility(FTTag::Abilities::Roll);
+	if (bCanPerInput)
+		PerInputTag = FTTag::Abilities::Roll;
+	bCanPerInput = false;
 }
 
 void AFT_PlayerController::Primary()

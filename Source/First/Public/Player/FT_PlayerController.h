@@ -37,6 +37,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="First|Input|Movement")
 	TObjectPtr<UInputAction> LookAction;
 
+	UPROPERTY(EditDefaultsOnly, Category="First|Input|Movement")
+	TObjectPtr<UInputAction> RollAction;
+	
 	UPROPERTY(EditDefaultsOnly, Category="First|Input|Abilities")
 	TObjectPtr<UInputAction> PrimaryAction;
 
@@ -47,6 +50,7 @@ private:
 	void StopJumping();
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void Roll();
 	void Primary();
 	void Secondary();
 	void ActivateAbility(const FGameplayTag& AbilityTag) const;

@@ -2,9 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
-#include "FT_PerInputWindow.generated.h"
+#include "FT_ComboWindowState.generated.h"
+
 UCLASS()
-class FIRST_API UFT_PerInputWindow : public UAnimNotifyState
+class FIRST_API UFT_ComboWindowState : public UAnimNotifyState
 {
 	GENERATED_BODY()
 
