@@ -7,16 +7,16 @@ void UFT_ComboWindow::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenc
                                   const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(),
-	                                                         FTTag::Events::Player::Attack::ComboWindow::Open,
-	                                                         FGameplayEventData());
+
+	const FGameplayTag ComboWindowTag = FTTag::Window::Combo;
+	UAbilitySystemBlueprintLibrary::AddLooseGameplayTags(MeshComp->GetOwner(), ComboWindowTag.GetSingleTagContainer());
 }
 
 void UFT_ComboWindow::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                 const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(),
-	                                                         FTTag::Events::Player::Attack::ComboWindow::Close,
-	                                                         FGameplayEventData());
+	const FGameplayTag ComboWindowTag = FTTag::Window::Combo;
+	UAbilitySystemBlueprintLibrary::RemoveLooseGameplayTags(MeshComp->GetOwner(),
+	                                                        ComboWindowTag.GetSingleTagContainer());
 }

@@ -5,6 +5,18 @@
 
 namespace FTTag
 {
+	namespace Window
+	{
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo)
+	}
+	namespace Combo
+	{
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(X)
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(XX)
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(XXX)
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(XXXX)
+	}
+
 	namespace Abilities
 	{
 		UE_DECLARE_GAMEPLAY_TAG_EXTERN(ActivatedOnGiven)
@@ -25,14 +37,6 @@ namespace FTTag
 	{
 		namespace Player
 		{
-			namespace Attack
-			{
-				namespace ComboWindow
-				{
-					UE_DECLARE_GAMEPLAY_TAG_EXTERN(Open)
-					UE_DECLARE_GAMEPLAY_TAG_EXTERN(Close)
-				}
-			}
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(PrimaryTraceHit)
 		}
 	}
