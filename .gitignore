@@ -1,0 +1,116 @@
+# ============================================
+# Unreal Engine - Build Artifacts
+# ============================================
+Binaries/
+Intermediate/
+Build/
+DerivedDataCache/
+
+# ============================================
+# Unreal Engine - Saved (local runtime data)
+# ============================================
+Saved/
+
+# ============================================
+# Unreal Engine - Generated VS/Rider Solution Files
+# ============================================
+*.sln
+*.sln.DotSettings
+*.sln.DotSettings.user
+*.suo
+*.user
+*.VC.db
+*.VC.opendb
+.vs/
+.vscode/
+.idea/
+
+# ============================================
+# Unreal Engine - Compiled Object / DDC Files
+# ============================================
+*.uasset.ddc
+*.umap.ddc
+*.uexp.ddc
+*.ubulk.ddc
+
+# ============================================
+# C++ Compilation
+# ============================================
+*.o
+*.obj
+*.pch
+*.pdb
+*.lib
+*.dll
+*.exe
+*.exp
+*.ilk
+*.tlog
+*.idb
+*.ipdb
+*.aps
+*.ncb
+*.sdf
+*.opensdf
+
+# ============================================
+# macOS
+# ============================================
+.DS_Store
+*.dSYM.zip
+*.dSYM
+.metadata
+
+# ============================================
+# Linux
+# ============================================
+*.debug
+*.dsym
+
+# ============================================
+# Unreal Engine - Content / Project (untrack common temp files)
+# ============================================
+*.tmp
+*.log
+*.tmp~
+*.old
+*.Orig
+*.Backup
+*.bak
+*.swp
+
+# ============================================
+# Crash Reports / Analytics
+# ============================================
+CrashReportClient/
+CrashReportClient.ini
+*.CrashReportClient.*
+
+# ============================================
+# Python Cache
+# ============================================
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ============================================
+# Local User-Specific Config Overrides
+# ============================================
+# These are user-specific and should not be shared
+Saved/Config/WindowsEditor/
+Saved/Config/LinuxEditor/
+Saved/Config/MacEditor/
+
+# ============================================
+# Shader Cache
+# ============================================
+*.ushaderbytecode
+ShaderCache/
+
+# ============================================
+# Pak / Package output
+# ============================================
+*.pak
+*.pak.manifest
+*.ucas
+*.utoc
