@@ -1,5 +1,6 @@
 #include "First/Public/Player/FT_PlayerController.h"
 
+#include "AbilitySystem/Combat/UFT_ComboComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
@@ -66,24 +67,24 @@ void AFT_PlayerController::Look(const FInputActionValue& Value)
 
 void AFT_PlayerController::Roll()
 {
+	if (UFT_ComboComponent* Combo = GetComboComponent())
+	{
+		Combo->ClearBufferedAttack(); // 翻滚=放弃提前按下的攻击
+		Combo->RefreshComboGrace(); // 翻滚延长连段保留时间，翻滚后攻击可继续连段
+	}
 	ActivateAbility(FTTag::Abilities::Roll);
-	if (bCanPerInput)
-		PerInputTag = FTTag::Abilities::Roll;
-	bCanPerInput = false;
 }
 
 void AFT_PlayerController::Primary()
 {
-	ActivateAbility(FTTag::Abilities::Primary);
-	if (bCanPerInput)
-		PerInputTag = FTTag::Abilities::Primary;
+	if (UFT_ComboComponent* Combo = GetComboComponent())
+		Combo->RequestAttack(FTTag::Abilities::Primary);
 }
 
 void AFT_PlayerController::Secondary()
 {
-	ActivateAbility(FTTag::Abilities::Secondary);
-	if (bCanPerInput)
-		PerInputTag = FTTag::Abilities::Secondary;
+	if (UFT_ComboComponent* Combo = GetComboComponent())
+		Combo->RequestAttack(FTTag::Abilities::Secondary);
 }
 
 void AFT_PlayerController::ActivateAbility(const FGameplayTag& AbilityTag) const
@@ -93,4 +94,11 @@ void AFT_PlayerController::ActivateAbility(const FGameplayTag& AbilityTag) const
 		return;
 
 	ASC->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());
+}
+
+UFT_ComboComponent* AFT_PlayerController::GetComboComponent() const
+{
+	if (APawn* CurrentPawn = GetPawn())
+		return CurrentPawn->FindComponentByClass<UFT_ComboComponent>();
+	return nullptr;
 }

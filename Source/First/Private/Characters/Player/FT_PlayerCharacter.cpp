@@ -1,5 +1,6 @@
 #include "First/Public/Characters/Player/FT_PlayerCharacter.h"
 
+#include "AbilitySystem/Combat/UFT_ComboComponent.h"
 #include "AbilitySystem/FT_AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -25,6 +26,8 @@ AFT_PlayerCharacter::AFT_PlayerCharacter()
 	CameraBoom->SetupAttachment(RootComponent);
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(FName("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom);
+
+	ComboComponent = CreateDefaultSubobject<UFT_ComboComponent>(FName("ComboComponent"));
 }
 
 UAbilitySystemComponent* AFT_PlayerCharacter::GetAbilitySystemComponent() const

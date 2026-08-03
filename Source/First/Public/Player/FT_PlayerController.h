@@ -8,18 +8,12 @@
 struct FGameplayTag;
 struct FInputActionValue;
 class UInputAction;
+class UFT_ComboComponent;
 
 UCLASS()
 class FIRST_API AFT_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
-
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bCanPerInput;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FGameplayTag PerInputTag;
 
 protected:
 	virtual void SetupInputComponent() override;
@@ -54,4 +48,5 @@ private:
 	void Primary();
 	void Secondary();
 	void ActivateAbility(const FGameplayTag& AbilityTag) const;
+	UFT_ComboComponent* GetComboComponent() const;
 };
