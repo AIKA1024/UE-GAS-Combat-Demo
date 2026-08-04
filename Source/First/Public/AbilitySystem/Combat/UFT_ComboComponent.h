@@ -37,7 +37,7 @@ public:
 	/** 由预输入窗口 notify（UFT_PerInputWindowState）调用，设置/关闭接受按键标志 */
 	void SetPerInputOpen(bool bOpen);
 
-	/** 由连段窗口 notify（UFT_ComboWindowState）调用：窗口打开时触发缓冲的下一段 */
+	/** 由窗口 notify（UFT_ComboWindowState，连段招或翻滚蒙太奇）调用：打开接招门槛并触发缓冲 */
 	void NotifyComboWindowOpened();
 
 	/** 由连段窗口 notify（UFT_ComboWindowState）调用：窗口关闭 */

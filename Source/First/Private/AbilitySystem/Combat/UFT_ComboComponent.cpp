@@ -38,58 +38,22 @@ void UFT_ComboComponent::RequestAttack(const FGameplayTag& InputTag)
 		return;
 	}
 
-	if (bComboAbilityActive)
+	// 连段中或宽限期（翻滚后）：一律要求窗口才接下一招；预输入窗口内缓冲
+	if (bComboWindowOpen)
 	{
-		// 连段中：组合窗口开 → 按输入跳下一段
-		if (bComboWindowOpen)
-		{
-			const FGameplayTag Next = GetNextNodeTag(CurrentNodeTag, InputTag);
-			if (Next.IsValid())
-			{
-				ClearBufferedAttack();
-				ActivateNode(Next);
-			}
-			// 无跳转则忽略（不推进也不重置）
-		}
-		else if (bPerInputOpen)
-		{
-			BufferAttack(InputTag); // 预输入窗口内 → 缓冲这次提前输入
-		}
-		return;
-	}
-
-	// 招式已结束：宽限期内按输入跳下一段；无跳转则按输入回到各自起手（左→X、右→Y）
-	if (GetWorld()->GetTimerManager().IsTimerActive(ComboResetTimer))
-	{
-		// 翻滚中：连段 GA 被 ActivationBlockedTags={Roll} 挡住无法激活，先缓冲，翻滚结束再触发
-		if (UAbilitySystemComponent* ASC = GetASC())
-		{
-			if (ASC->HasMatchingGameplayTag(FTTag::Abilities::Roll))
-			{
-				BufferAttack(InputTag);
-				return;
-			}
-		}
-
 		const FGameplayTag Next = GetNextNodeTag(CurrentNodeTag, InputTag);
 		if (Next.IsValid())
 		{
 			ClearBufferedAttack();
 			ActivateNode(Next);
 		}
-		else
-		{
-			const FGameplayTag Start = GetStartNodeTag(InputTag);
-			if (Start.IsValid())
-				ActivateNode(Start);
-		}
+		// 无跳转则忽略
 	}
-	else
+	else if (bPerInputOpen)
 	{
-		const FGameplayTag Start = GetStartNodeTag(InputTag);
-		if (Start.IsValid())
-			ActivateNode(Start);
+		BufferAttack(InputTag);
 	}
+	// 既无窗口也无预输入窗口 → 忽略（严格节奏：必须进窗口才接）
 }
 
 void UFT_ComboComponent::NotifyComboActivated(const FGameplayTag& NodeTag)
@@ -132,11 +96,10 @@ void UFT_ComboComponent::SetPerInputOpen(bool bOpen)
 
 void UFT_ComboComponent::NotifyComboWindowOpened()
 {
-	// 只有连段中的窗口（bComboAbilityActive=true）才算"可续段窗口"；
-	// 翻滚蒙太奇/其它动画的窗口打开时不置位，避免绕过节奏门槛
-	bComboWindowOpen = bComboAbilityActive;
+	// 任何 FT_ComboWindowState 窗口（连段招 / 翻滚蒙太奇）都打开接招门槛，并触发缓冲
+	bComboWindowOpen = true;
 
-	// 窗口打开：触发缓冲的攻击（预输入 / 翻滚中缓冲）
+	// 窗口打开：触发缓冲的攻击（预输入）
 	FlushBufferedAttack();
 }
 
@@ -167,9 +130,11 @@ void UFT_ComboComponent::FlushBufferedAttack()
 
 void UFT_ComboComponent::OnRollTagChanged(FGameplayTag Tag, int32 NewCount)
 {
-	// 翻滚结束（Roll tag 归零）→ 触发翻滚中缓冲的攻击
+	// 翻滚结束（Roll tag 归零）→ 丢弃翻滚中残留的缓冲：
+	// 预输入的触发交给翻滚窗口（NotifyComboWindowOpened → FlushBufferedAttack），
+	// 窗口没触发过的输入不再生效
 	if (NewCount == 0)
-		FlushBufferedAttack();
+		ClearBufferedAttack();
 }
 
 void UFT_ComboComponent::RefreshComboGrace()
