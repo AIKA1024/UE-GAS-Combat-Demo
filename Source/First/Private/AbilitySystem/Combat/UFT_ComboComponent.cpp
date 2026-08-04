@@ -53,7 +53,26 @@ void UFT_ComboComponent::RequestAttack(const FGameplayTag& InputTag)
 	{
 		BufferAttack(InputTag);
 	}
-	// 既无窗口也无预输入窗口 → 忽略（严格节奏：必须进窗口才接）
+	else
+	{
+		// 无窗口也无预输入窗口：
+		//   连段招播放中（如收招期）→ 忽略，等窗口/预输入
+		if (bComboAbilityActive)
+			return;
+
+		//   翻滚中 → 忽略（等翻滚窗口/预输入，避免翻滚被重起打断）
+		if (UAbilitySystemComponent* ASC = GetASC())
+		{
+			if (ASC->HasMatchingGameplayTag(FTTag::Abilities::Roll))
+				return;
+		}
+
+		//   普通招已结束的宽限期 → 立即重置并重新起手（不再等 2s 死输入）
+		ResetCombo();
+		const FGameplayTag Start = GetStartNodeTag(InputTag);
+		if (Start.IsValid())
+			ActivateNode(Start);
+	}
 }
 
 void UFT_ComboComponent::NotifyComboActivated(const FGameplayTag& NodeTag)
@@ -73,7 +92,8 @@ void UFT_ComboComponent::NotifyComboEnded(const FGameplayTag& NodeTag, bool bWas
 	bComboAbilityActive = false;
 	bComboWindowOpen = false;
 
-	// 先开宽限期再处理缓冲，flush 时 RequestAttack 才能走"宽限期"分支
+	// 开宽限期（ComboResetDelay 秒）：这段内 CurrentNodeTag 保留——翻滚窗口/后续窗口开时能接下一招；
+	// 到期 OnComboReset 清空连段。严格模式下宽限期本身不再允许自由接招（必须进窗口）。
 	if (CurrentNodeTag.IsValid() && !GetWorld()->GetTimerManager().IsTimerActive(ComboResetTimer))
 		GetWorld()->GetTimerManager().SetTimer(ComboResetTimer, this, &ThisClass::OnComboReset, ComboResetDelay);
 
