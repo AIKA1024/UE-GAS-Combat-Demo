@@ -22,4 +22,6 @@ public:
 
 	AFT_PlayerState();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFT_AttributeSet* GetAttributeSet() const { return AttributeSet; }
 };

@@ -6,7 +6,6 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "KismetTraceUtils.h"
-#include "Characters/Player/FT_PlayerCharacter.h"
 #include "GamePlayTags/FTTag.h"
 
 void UFT_Serath_PrimaryAttackState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
@@ -58,24 +57,25 @@ void UFT_Serath_PrimaryAttackState::SendEventToActors(TArray<FHitResult> Hits, c
 {
 	if (!IsValid(MeshComp))
 		return;
+
+	AActor* Attacker = MeshComp->GetOwner();
 	for (FHitResult Hit : Hits)
 	{
-		AFT_PlayerCharacter* PlayerCharacter = Cast<AFT_PlayerCharacter>(Hit.GetActor());
-		if (!PlayerCharacter || PlayerCharacter->GetAbilitySystemComponent()->HasMatchingGameplayTag(FTTag::Status::Dead))
+		AActor* HitActor = Hit.GetActor();
+		if (!HitActor || HitActor == Attacker)
 			continue;
-		const UAbilitySystemComponent* AbilitySystem = PlayerCharacter->GetAbilitySystemComponent();
-		if (!IsValid(AbilitySystem))
+
+		UAbilitySystemComponent* AbilitySystem = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitActor);
+		if (!IsValid(AbilitySystem) || AbilitySystem->HasMatchingGameplayTag(FTTag::Status::Dead))
 			continue;
 
 		FGameplayEffectContextHandle EffectContext = AbilitySystem->MakeEffectContext();
 		EffectContext.AddHitResult(Hit);
 
 		FGameplayEventData PayloadData;
-		PayloadData.Target = PlayerCharacter;
+		PayloadData.Target = HitActor;
 		PayloadData.ContextHandle = EffectContext;
-		PayloadData.Instigator = MeshComp->GetOwner();
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(),
-		                                                         FTTag::Events::Player::PrimaryTraceHit,
-		                                                         PayloadData);
+		PayloadData.Instigator = Attacker;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Attacker, FTTag::Events::Player::PrimaryTraceHit, PayloadData);
 	}
 }

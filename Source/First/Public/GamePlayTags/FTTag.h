@@ -37,10 +37,34 @@ namespace FTTag
 	namespace Status
 	{
 		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dead)
+
+		/** 处于攻击招式播放中（攻击 GA 激活时自动挂上） */
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attacking)
+
+		/** 霸体：韧性 > 0 时挂上，受击不被打断（播附加受击） */
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(SuperArmor)
+
+		/** 正在硬直受击（完整受击/打断施法后） */
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact)
+
+		/** 正在播放霸体附加受击 */
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(ArmorHit)
 	}
 
 	namespace Events
 	{
+		namespace Hit
+		{
+			/** 普通受击：目标未处于霸体（未出招或韧性为 0） */
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Normal)
+
+			/** 霸体附加受击：韧性被扣但未归零 */
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Armor)
+
+			/** 韧性破：韧性被这一击打空，打断施法 + 完整受击 */
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Break)
+		}
+
 		namespace Player
 		{
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(PrimaryTraceHit)

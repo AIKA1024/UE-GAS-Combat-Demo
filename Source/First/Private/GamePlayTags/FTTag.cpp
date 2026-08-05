@@ -37,10 +37,21 @@ namespace FTTag
 	namespace Status
 	{
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Dead, "FFTag.Status.Dead", "Tag for tag Dead Actor")
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attacking, "FFTag.Status.Attacking", "Tag for Attacking")
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(SuperArmor, "FFTag.Status.SuperArmor", "Tag for SuperArmor")
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(HitReact, "FFTag.Status.HitReact", "Tag for HitReact")
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(ArmorHit, "FFTag.Status.ArmorHit", "Tag for ArmorHit")
 	}
 
 	namespace Events
 	{
+		namespace Hit
+		{
+			UE_DEFINE_GAMEPLAY_TAG_COMMENT(Normal, "FFTag.Event.Hit.Normal", "Tag for Normal Hit")
+			UE_DEFINE_GAMEPLAY_TAG_COMMENT(Armor, "FFTag.Event.Hit.Armor", "Tag for Armor Hit")
+			UE_DEFINE_GAMEPLAY_TAG_COMMENT(Break, "FFTag.Event.Hit.Break", "Tag for Poise Break Hit")
+		}
+
 		namespace Player
 		{
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(PrimaryTraceHit, "FFTag.Event.Player.PrimaryTraceHit",

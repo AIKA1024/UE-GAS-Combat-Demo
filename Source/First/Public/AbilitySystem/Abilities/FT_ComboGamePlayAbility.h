@@ -1,17 +1,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/FT_GamePlayAbility.h"
+#include "AbilitySystem/Abilities/FT_AttackGamePlayAbility.h"
 #include "GameplayTagContainer.h"
 #include "FT_ComboGamePlayAbility.generated.h"
 
 /**
- * 连段特化的 GameplayAbility：激活/结束时通知 UFT_ComboComponent 更新连段状态。
+ * 连段特化的 GameplayAbility（玩家侧）：
+ *  - 继承 UFT_AttackGamePlayAbility：攻击/韧性/伤害/命中判定逻辑都在基类
+ *  - 额外：激活/结束时通知 UFT_ComboComponent 更新连段状态
  * ComboNodeTag 标识本招在连段树里的节点（须与树里该节点的 NodeTag 一致）。
- * 非连段能力（翻滚等）直接继承 UFT_GamePlayAbility，不携带连段逻辑。
  */
 UCLASS()
-class FIRST_API UFT_ComboGamePlayAbility : public UFT_GamePlayAbility
+class FIRST_API UFT_ComboGamePlayAbility : public UFT_AttackGamePlayAbility
 {
 	GENERATED_BODY()
 

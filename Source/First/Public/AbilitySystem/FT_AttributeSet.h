@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSet.h"
-#include "AttributeSet.h"
 
 #include "FT_AttributeSet.generated.h"
 
@@ -40,4 +39,14 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(ThisClass, MaxMana);
+
+	//CurrentPoise 当前韧性：出招时由攻击 GA 授予，受击扣减；归零 = 韧性破，受击可打断施法
+	UPROPERTY(BlueprintReadOnly)
+	FGameplayAttributeData CurrentPoise;
+	ATTRIBUTE_ACCESSORS(ThisClass, CurrentPoise);
+
+	//MaxPoise 韧性上限（当前仅作为授予时钳制，预留）
+	UPROPERTY(BlueprintReadOnly)
+	FGameplayAttributeData MaxPoise;
+	ATTRIBUTE_ACCESSORS(ThisClass, MaxPoise);
 };
