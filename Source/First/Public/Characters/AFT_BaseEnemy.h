@@ -7,6 +7,7 @@
 #include "GenericTeamAgentInterface.h"
 #include "AFT_BaseEnemy.generated.h"
 
+class AFT_PlayerCharacter;
 class UAIPerceptionComponent;
 class UFT_AbilitySystemComponent;
 class UFT_AttributeSet;
@@ -20,7 +21,12 @@ public:
 	AFT_BaseEnemy();
 	virtual void BeginPlay() override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	virtual FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(2); }
+	virtual FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(2); }// UAIPerceptionComponent队伍
+	
+	
+protected:
+	UFUNCTION(BlueprintCallable)
+	void TrackPlayer(AActor* Player, float MaxDistance, float AcceptanceRadius = 60.f);
 
 private:
 	UPROPERTY(VisibleAnywhere, Category="First|Ability")
