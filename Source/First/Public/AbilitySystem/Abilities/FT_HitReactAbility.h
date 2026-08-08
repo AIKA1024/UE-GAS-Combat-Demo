@@ -5,6 +5,7 @@
 #include "FT_HitReactAbility.generated.h"
 
 class UAnimMontage;
+class UAnimInstance;
 
 /**
  * 受击反应 GA 基类：
@@ -25,6 +26,10 @@ class FIRST_API UFT_HitReactAbility : public UFT_GamePlayAbility
 public:
 	UFT_HitReactAbility();
 
+	/** 受击动画重播时的过渡时长（旧动画淡出 + 新动画淡入），秒 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="First|HitReact")
+	float HitReactBlendTime{0.15f};
+
 protected:
 	/** 选取本次要播的受击蒙太奇（子类实现：从角色身上取对应动画）；返回 nullptr = 不播动画只执行逻辑 */
 	virtual UAnimMontage* GetReactMontage(const AActor* Avatar) const { return nullptr; }
@@ -36,4 +41,21 @@ protected:
 
 	/** 蒙太奇播放完毕/被打断 → 结束能力 */
 	void OnReactMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+	/** 播放中再次命中 → 重播受击动画（ActivateAbility 注册的命中事件监听回调） */
+	void OnHitEventWhileActive(FGameplayTag EventTag, const FGameplayEventData* Payload);
+
+	/** 播放蒙太奇 + 按命中方向跳节 + 绑定结束回调（首激活与重播共用） */
+	void PlayReactMontage(UAnimInstance* Anim, UAnimMontage* MontageToPlay, const FGameplayEventData* Payload);
+
+	/** 收集本能力配的 GameplayEvent 触发器 tag（监听播放中再次命中用） */
+	FGameplayTagContainer CollectTriggerEventTags() const;
+
+private:
+	/** 播放期间命中事件的监听句柄（EndAbility 时移除） */
+	FDelegateHandle HitEventHandle;
+
+	/** 当前正在播放的受击蒙太奇（重播时用于解绑/停止旧动画） */
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> CurrentReactMontage;
 };

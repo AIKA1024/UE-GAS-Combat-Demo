@@ -9,9 +9,6 @@ UFT_HitReact_Stagger::UFT_HitReact_Stagger()
 	StaggerTags.AddTag(FTTag::Status::HitReact);
 	SetAssetTags(StaggerTags);
 
-	// 硬直中不重复触发（同一帧多段伤害只进一次受击）
-	ActivationBlockedTags.AddTag(FTTag::Status::HitReact);
-
 	// 打断施法：取消正在播放的攻击 GA
 	CancelAbilitiesWithTag.AddTag(FTTag::Status::Attacking);
 	// 硬直期间不能起新攻击、不能翻滚

@@ -9,11 +9,7 @@ UFT_HitReact_Armor::UFT_HitReact_Armor()
 	ArmorHitTags.AddTag(FTTag::Status::ArmorHit);
 	SetAssetTags(ArmorHitTags);
 
-	// 一帧内多段命中不叠加触发
-	ActivationBlockedTags.AddTag(FTTag::Status::ArmorHit);
-
 	// 不 Cancel / 不 Block：霸体受击不打断施法、不封锁动作
-
 	FAbilityTriggerData TriggerArmor;
 	TriggerArmor.TriggerTag = FTTag::Events::Hit::Armor;
 	TriggerArmor.TriggerSource = EGameplayAbilityTriggerSource::GameplayEvent;
