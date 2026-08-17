@@ -22,11 +22,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(2); }// UAIPerceptionComponent队伍
-	
-	
-protected:
-	UFUNCTION(BlueprintCallable)
-	void TrackPlayer(AActor* Player, float MaxDistance, float AcceptanceRadius = 60.f);
+	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category="First|Ability")
@@ -35,7 +31,4 @@ private:
 	/** 敌人属性集（Health/韧性等），与 ASC 同挂 Pawn 上 */
 	UPROPERTY(VisibleAnywhere, Category="First|Ability")
 	TObjectPtr<UFT_AttributeSet> AttributeSet;
-
-	UPROPERTY(VisibleAnywhere, Category="First|AI")
-	TObjectPtr<UAIPerceptionComponent> UAIPerceptionComp;
 };

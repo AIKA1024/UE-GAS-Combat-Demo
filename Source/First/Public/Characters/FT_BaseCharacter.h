@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayTagAssetInterface.h"
 #include "Engine/EngineTypes.h"
 #include "GameFramework/Character.h"
 #include "GameplayTagContainer.h"
@@ -13,7 +14,7 @@ class UAnimMontage;
 class UGameplayAbility;
 
 UCLASS()
-class FIRST_API AFT_BaseCharacter : public ACharacter, public IAbilitySystemInterface
+class FIRST_API AFT_BaseCharacter : public ACharacter, public IAbilitySystemInterface,public IGameplayTagAssetInterface
 {
 	GENERATED_BODY()
 
@@ -26,6 +27,7 @@ public:
 
 	/** 霸体附加受击蒙太奇（每个角色 BP 各自配） */
 	UAnimMontage* GetArmorHitMontage() const { return ArmorHitMontage; }
+	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 
 protected:
 	void GiveStartupAbilities();

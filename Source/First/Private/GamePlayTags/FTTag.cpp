@@ -6,6 +6,7 @@ namespace FTTag
 	{
 		UE_DEFINE_GAMEPLAY_TAG(Combo, "FFTag.Windows.Combo")
 	}
+
 	namespace Combo
 	{
 		UE_DEFINE_GAMEPLAY_TAG(X, "FFTag.Combo.X")
@@ -41,6 +42,12 @@ namespace FTTag
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(SuperArmor, "FFTag.Status.SuperArmor", "Tag for SuperArmor")
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(HitReact, "FFTag.Status.HitReact", "Tag for HitReact")
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(ArmorHit, "FFTag.Status.ArmorHit", "Tag for ArmorHit")
+
+		// ========== AI 行为状态（新增） ==========
+		UE_DEFINE_GAMEPLAY_TAG(FTTag::Status::Combat, "FFTag.Status.Combat");
+		UE_DEFINE_GAMEPLAY_TAG(FTTag::Status::Chasing, "FFTag.Status.Chasing");
+		UE_DEFINE_GAMEPLAY_TAG(FTTag::Status::Investigate, "FFTag.Status.Investigate");
+		UE_DEFINE_GAMEPLAY_TAG(FTTag::Status::Patrol, "FFTag.Status.Patrol");
 	}
 
 	namespace Events

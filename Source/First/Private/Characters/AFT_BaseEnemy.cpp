@@ -13,7 +13,6 @@ AFT_BaseEnemy::AFT_BaseEnemy()
 
 	AbilitySystemComponent = CreateDefaultSubobject<UFT_AbilitySystemComponent>("AbilitySystemComponent");
 	AttributeSet = CreateDefaultSubobject<UFT_AttributeSet>("AttributeSet");
-	UAIPerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>("UAIPerceptionComponent");
 }
 
 void AFT_BaseEnemy::BeginPlay()
@@ -32,27 +31,7 @@ UAbilitySystemComponent* AFT_BaseEnemy::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-void AFT_BaseEnemy::TrackPlayer(AActor* Player, float MaxDistance, float AcceptanceRadius)
+void AFT_BaseEnemy::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
 {
-	if (!IsValid(Player))
-		return;
-	if (FVector::DistSquared(GetActorLocation(), Player->GetActorLocation()) > FMath::Square(MaxDistance))
-	{
-		return;
-	}
-
-	// 导航需要 AIController：动态生成的敌人可能还没被 Possess，先补一个默认控制器
-	AAIController* AIController = Cast<AAIController>(GetController());
-	if (AIController == nullptr)
-	{
-		SpawnDefaultController(); // 返回 void：失败时 Controller 仍为 null
-		AIController = Cast<AAIController>(GetController());
-	}
-	if (AIController == nullptr)
-	{
-		return;
-	}
-
-	// 用 UE 导航（NavMesh 寻路）朝玩家移动，到达 AcceptanceRadius 内停步
-	AIController->MoveToActor(Player, AcceptanceRadius, /*bStopOnOverlap*/ true, /*bUsePathfinding*/ true);
+	TagContainer = AbilitySystemComponent->GetOwnedGameplayTags();
 }

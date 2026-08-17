@@ -11,6 +11,8 @@ class FIRST_API UFT_AbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 
 public:
+	void OnChasingTagChanged(FGameplayTag GameplayTag, int I);
+	virtual void BeginPlay() override;
 	UFT_AbilitySystemComponent();
 
 protected:

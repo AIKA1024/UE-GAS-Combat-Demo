@@ -16,6 +16,11 @@ UAbilitySystemComponent* AFT_BaseCharacter::GetAbilitySystemComponent() const
 	return nullptr;
 }
 
+void AFT_BaseCharacter::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
+{
+	
+}
+
 void AFT_BaseCharacter::GiveStartupAbilities()
 {
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();

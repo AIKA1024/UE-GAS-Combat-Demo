@@ -17,6 +17,8 @@ class FIRST_API AFT_PlayerCharacter : public AFT_BaseCharacter,public IGenericTe
 
 public:
 	AFT_PlayerCharacter();
+	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
+	virtual void BeginPlay() override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void PossessedBy(AController* NewController) override;
 

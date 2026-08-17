@@ -13,7 +13,7 @@
 AFT_PlayerCharacter::AFT_PlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
@@ -32,6 +32,17 @@ AFT_PlayerCharacter::AFT_PlayerCharacter()
 
 	ComboComponent = CreateDefaultSubobject<UFT_ComboComponent>("ComboComponent");
 	AIPerceptionStimuliSourceComp = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>("AIPerceptionStimuliSourceComp");
+}
+
+void AFT_PlayerCharacter::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
+{
+	TagContainer = GetAbilitySystemComponent()->GetOwnedGameplayTags();
+}
+
+void AFT_PlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	Tags.Add("Player");
 }
 
 UAbilitySystemComponent* AFT_PlayerCharacter::GetAbilitySystemComponent() const
