@@ -14,7 +14,7 @@ class FIRST_API AFT_PlayerState : public APlayerState,public IAbilitySystemInter
 	GENERATED_BODY()
 
 public:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UFT_AttributeSet> AttributeSet;
 	
 	UPROPERTY(VisibleAnywhere,Category="First|Ability")

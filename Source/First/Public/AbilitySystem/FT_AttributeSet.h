@@ -16,37 +16,41 @@ UCLASS()
 class FIRST_API UFT_AttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
-	
+
 	//Health
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(ThisClass, Health);
 
 	//MaxHealth
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(ThisClass, MaxHealth);
 
 	//Mana
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(ThisClass, Mana);
 
 	//MaxMana
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(ThisClass, MaxMana);
 
 	//CurrentPoise 当前韧性：出招时由攻击 GA 授予，受击扣减；归零 = 韧性破，受击可打断施法
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData CurrentPoise;
 	ATTRIBUTE_ACCESSORS(ThisClass, CurrentPoise);
 
 	//MaxPoise 韧性上限（当前仅作为授予时钳制，预留）
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MaxPoise;
 	ATTRIBUTE_ACCESSORS(ThisClass, MaxPoise);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes | Combat")
+	FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS(UFT_AttributeSet, Damage);
 };

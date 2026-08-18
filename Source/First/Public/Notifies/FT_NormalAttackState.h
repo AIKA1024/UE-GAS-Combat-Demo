@@ -4,21 +4,32 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
-#include "FT_Serath_PrimaryAttackState.generated.h"
+#include "FT_NormalAttackState.generated.h"
 
 class AActor;
 
 UCLASS()
-class FIRST_API UFT_Serath_PrimaryAttackState : public UAnimNotifyState
+class FIRST_API UFT_NormalAttackState : public UAnimNotifyState
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="First|Socket")
+	
+	UPROPERTY(EditAnywhere, Category="First|Damage")
+	float DamageMultiplier = 1.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="First|Socket")
 	float SocketExtensionOffset{0.f};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="First|Socket")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="First|Socket")
 	float SphereTraceRadius{60.f};
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="First|Socket")
+	FName SocketName{TEXT("SocketName")};
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="First|Debugs")
+	bool bDrawDebug{false};
+	
 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration,
 		const FAnimNotifyEventReference& EventReference) override;
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime,
@@ -39,9 +50,5 @@ private:
 	/** 上一帧的武器 Socket 世界位置（按 MeshComp 区分），用于运动轨迹扫描防高速穿透 */
 	TMap<TWeakObjectPtr<USkeletalMeshComponent>, FVector> PrevSocketByMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="First|Debugs", meta=(AllowPrivateAccess=true))
-	bool bDrawDebug{false};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
-	FName SocketName{TEXT("Mace_head")};
 };

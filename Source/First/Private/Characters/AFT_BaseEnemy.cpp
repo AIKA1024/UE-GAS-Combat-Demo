@@ -2,8 +2,6 @@
 
 #include "AbilitySystem/FT_AbilitySystemComponent.h"
 #include "AbilitySystem/FT_AttributeSet.h"
-#include "AIController.h"
-#include "Runtime/AIModule/Classes/Perception/AIPerceptionComponent.h"
 
 
 // Sets default values

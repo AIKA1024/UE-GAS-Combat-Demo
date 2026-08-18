@@ -1,10 +1,10 @@
-#include "Notifies/FT_Serath_PrimaryAttackState.h"
+#include "Notifies/FT_NormalAttackState.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "KismetTraceUtils.h"
 #include "GamePlayTags/FTTag.h"
 
-void UFT_Serath_PrimaryAttackState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+void UFT_NormalAttackState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
@@ -14,7 +14,7 @@ void UFT_Serath_PrimaryAttackState::NotifyBegin(USkeletalMeshComponent* MeshComp
 	PrevSocketByMesh.FindOrAdd(MeshComp) = MeshComp->GetSocketTransform(SocketName).GetLocation();
 }
 
-void UFT_Serath_PrimaryAttackState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+void UFT_NormalAttackState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                           float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);
@@ -22,7 +22,7 @@ void UFT_Serath_PrimaryAttackState::NotifyTick(USkeletalMeshComponent* MeshComp,
 	SendEventToActors(HitResults, MeshComp);
 }
 
-void UFT_Serath_PrimaryAttackState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+void UFT_NormalAttackState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
@@ -31,7 +31,7 @@ void UFT_Serath_PrimaryAttackState::NotifyEnd(USkeletalMeshComponent* MeshComp, 
 	PrevSocketByMesh.Remove(MeshComp);
 }
 
-TArray<FHitResult> UFT_Serath_PrimaryAttackState::PerformSphereTrace(USkeletalMeshComponent* MeshComp)
+TArray<FHitResult> UFT_NormalAttackState::PerformSphereTrace(USkeletalMeshComponent* MeshComp)
 {
 	const FTransform SocketTransform = MeshComp->GetSocketTransform(SocketName);
 	const FVector CurrentSocket = SocketTransform.GetLocation();
@@ -101,7 +101,7 @@ TArray<FHitResult> UFT_Serath_PrimaryAttackState::PerformSphereTrace(USkeletalMe
 	return OutHits;
 }
 
-void UFT_Serath_PrimaryAttackState::SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp)
+void UFT_NormalAttackState::SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp)
 {
 	if (!IsValid(MeshComp))
 		return;

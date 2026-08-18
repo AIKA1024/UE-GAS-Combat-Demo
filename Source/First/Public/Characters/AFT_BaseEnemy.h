@@ -5,12 +5,14 @@
 #include "CoreMinimal.h"
 #include "FT_BaseCharacter.h"
 #include "GenericTeamAgentInterface.h"
+#include "AbilitySystem/Combat/Config/CombatAnimationData.h"
 #include "AFT_BaseEnemy.generated.h"
 
 class AFT_PlayerCharacter;
 class UAIPerceptionComponent;
 class UFT_AbilitySystemComponent;
 class UFT_AttributeSet;
+
 
 UCLASS()
 class FIRST_API AFT_BaseEnemy : public AFT_BaseCharacter, public IGenericTeamAgentInterface
@@ -23,6 +25,9 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(2); }// UAIPerceptionComponent队伍
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
+	FFT_CombatAnimationData CombatAnimationData;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category="First|Ability")
