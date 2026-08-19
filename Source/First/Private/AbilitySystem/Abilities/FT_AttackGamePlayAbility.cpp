@@ -24,6 +24,9 @@ void UFT_AttackGamePlayAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	// 新一次出招：清空已结算目标，本招内每个目标只结算一次伤害+受击
+	SettledTargets.Reset();
+
 	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
 	{
 		// 授予本招韧性 + 霸体
@@ -71,6 +74,12 @@ void UFT_AttackGamePlayAbility::HandleAttackHitEvent(FGameplayTag EventTag, cons
 	AActor* Instigator = const_cast<AActor*>(Payload->Instigator.Get());
 	if (!Target)
 		return;
+
+	// 同一目标本次激活内只结算一次：同帧重复 AttackHit（多组件命中/多 Mesh 命中等）在此合并，
+	// 避免伤害与受击事件（ProcessHit）被重复触发
+	if (SettledTargets.Contains(Target))
+		return;
+	SettledTargets.Add(Target);
 
 	// 生命伤害（占位实现：直接扣属性。后续建议替换为正式伤害 GameplayEffect + 减伤/护甲管线）
 	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target))

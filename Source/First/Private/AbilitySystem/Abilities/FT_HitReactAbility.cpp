@@ -18,12 +18,6 @@ void UFT_HitReactAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	// 记录当前时间戳，防止同一事件重复触发
-	if (UWorld* World = GetWorld())
-	{
-		LastProcessedEventTime = World->GetTimeSeconds();
-	}
-
 	// 先播放蒙太奇，再注册事件监听
 	UAnimInstance* Anim = nullptr;
 	UAnimMontage* MontageToPlay = nullptr;
@@ -89,18 +83,8 @@ void UFT_HitReactAbility::PlayReactMontage(UAnimInstance* Anim, UAnimMontage* Mo
 
 void UFT_HitReactAbility::OnHitEventWhileActive(FGameplayTag EventTag, const FGameplayEventData* Payload)
 {
-	// 防止同一事件重复触发：检查时间戳（同一帧内的事件忽略）
-	if (UWorld* World = GetWorld())
-	{
-		const float CurrentTime = World->GetTimeSeconds();
-		// 如果时间差小于一帧（约0.016秒），认为是同一事件
-		if (CurrentTime - LastProcessedEventTime < 0.02f)
-		{
-			return;
-		}
-		LastProcessedEventTime = CurrentTime;
-	}
-
+	// 重复事件已在攻击方按目标去重（UFT_AttackGamePlayAbility::SettledTargets），
+	// 这里收到的每个 Hit.* 事件都对应一次真实命中，直接重播受击动画
 	UAnimInstance* Anim = nullptr;
 	UAnimMontage* MontageToPlay = nullptr;
 	const FGameplayAbilityActorInfo* ActorInfo = GetCurrentActorInfo();

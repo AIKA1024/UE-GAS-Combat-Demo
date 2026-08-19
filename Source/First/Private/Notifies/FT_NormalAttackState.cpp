@@ -85,17 +85,20 @@ TArray<FHitResult> UFT_NormalAttackState::PerformSphereTrace(USkeletalMeshCompon
 
 	// 本次 notify 窗口内已命中的对象不重复命中：仅返回并记录新增命中的对象
 	TArray<TWeakObjectPtr<AActor>>& AlreadyHit = HitActorsByMesh.FindOrAdd(MeshComp);
-	OutHits.RemoveAll([&AlreadyHit](const FHitResult& Hit)
+	// 单次扫描可能因多组件（胶囊体+网格）对同一角色返回多条命中，需在帧内先合并，
+	// 否则 RemoveAll 执行时它们都还没进 AlreadyHit 会全部通过 → 同一帧对同一目标重复发事件
+	TSet<AActor*> NewHitThisSweep;
+	OutHits.RemoveAll([&AlreadyHit, &NewHitThisSweep](const FHitResult& Hit)
 	{
 		AActor* Actor = Hit.GetActor();
-		return !Actor || AlreadyHit.Contains(TWeakObjectPtr(Actor));
+		if (!Actor || AlreadyHit.Contains(TWeakObjectPtr(Actor)) || NewHitThisSweep.Contains(Actor))
+			return true;
+		NewHitThisSweep.Add(Actor);
+		return false;
 	});
 	for (const FHitResult& Hit : OutHits)
 	{
-		if (AActor* Actor = Hit.GetActor())
-		{
-			AlreadyHit.Add(TWeakObjectPtr(Actor));
-		}
+		AlreadyHit.Add(TWeakObjectPtr(Hit.GetActor()));
 	}
 
 		return OutHits;

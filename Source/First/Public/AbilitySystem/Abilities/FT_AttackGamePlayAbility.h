@@ -44,4 +44,11 @@ protected:
 private:
 	/** 激活期间绑定的命中事件句柄（EndAbility 时解绑） */
 	FDelegateHandle AttackHitEventHandle;
+
+	/**
+	 * 本次激活已结算过（伤害+受击）的目标：同一目标在一次攻击激活内只结算一次。
+	 * 合并同帧重复 AttackHit 的来源：单次 sweep 多组件命中（胶囊体+网格）、多 Mesh 命中同一目标等。
+	 * 多段攻击应拆成多次 GA 激活（与连段设计一致：每段连击一个 GA）。
+	 */
+	TSet<TWeakObjectPtr<AActor>> SettledTargets;
 };
