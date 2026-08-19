@@ -55,9 +55,10 @@ void UFT_HitReactAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 void UFT_HitReactAbility::PlayReactMontage(UAnimInstance* Anim, UAnimMontage* MontageToPlay, const FGameplayEventData* Payload)
 {
 	CurrentReactMontage = MontageToPlay;
-	// 统一用小过渡淡入：即使蒙太奇资源里没配 BlendIn，重播也能平滑接入
-	MontageToPlay->BlendIn.SetBlendTime(HitReactBlendTime);
-	Anim->Montage_Play(MontageToPlay, 1.f);
+	// 用按次调用的 BlendIn 参数做淡入（不修改蒙太奇资产）：
+	// 重播时引擎会新建蒙太奇实例，从权重 0 按 HitReactBlendTime 淡入，
+	// 与旧实例（OnHitEventWhileActive 里 Montage_Stop）的淡出形成交叉过渡
+	Anim->Montage_PlayWithBlendIn(MontageToPlay, FAlphaBlendArgs(HitReactBlendTime), 1.f);
 
 	if (Payload && IsValid(Payload->Instigator) && IsValid(Payload->Target))
 	{
