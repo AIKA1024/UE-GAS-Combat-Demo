@@ -1,14 +1,17 @@
 #include "AbilitySystem/Abilities/FT_HitReactAbility.h"
 
 #include "AbilitySystem/Combat/UFT_HitReactFunctionLibrary.h"
-#include "AbilitySystemComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 
 UFT_HitReactAbility::UFT_HitReactAbility()
 {
-	// 需要每实例状态（蒙太奇结束委托句柄），必须 InstancedPerActor
+	// 需要每实例状态（当前蒙太奇），必须 InstancedPerActor
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+
+	// 播放中再次命中 → 引擎结束当前激活并重新激活（ActivateAbility 重播蒙太奇）。
+	// 相比自监听命中事件重播，没有"回声"问题，也无需手动管理监听句柄
+	bRetriggerInstancedAbility = true;
 }
 
 void UFT_HitReactAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -18,7 +21,6 @@ void UFT_HitReactAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	// 先播放蒙太奇，再注册事件监听
 	UAnimInstance* Anim = nullptr;
 	UAnimMontage* MontageToPlay = nullptr;
 	if (ActorInfo && ActorInfo->AvatarActor.IsValid())
@@ -36,28 +38,18 @@ void UFT_HitReactAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	{
 		// 没取到蒙太奇（角色没配/子类没回退）：仅执行打断/封锁逻辑后立即结束
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
-		return;
-	}
-
-	// 播放中再次命中 → 重播受击动画：监听本能力的事件触发器 tag
-	//（能力激活态下 GAS 的 Spec->IsActive() 会拒绝再次激活，必须自己在播放期间监听命中）
-	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
-	{
-		const FGameplayTagContainer TriggerTags = CollectTriggerEventTags();
-		if (!TriggerTags.IsEmpty())
-		{
-			HitEventHandle = ASC->AddGameplayEventTagContainerDelegate(
-				TriggerTags, FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnHitEventWhileActive));
-		}
 	}
 }
 
 void UFT_HitReactAbility::PlayReactMontage(UAnimInstance* Anim, UAnimMontage* MontageToPlay, const FGameplayEventData* Payload)
 {
+	// 先记录当前蒙太奇：重触发时旧蒙太奇实例会被下面 Play 的组规则打断，
+	// 其迟到的结束回调靠 CurrentReactMontage 甄别（见 OnReactMontageEnded）
 	CurrentReactMontage = MontageToPlay;
+
 	// 用按次调用的 BlendIn 参数做淡入（不修改蒙太奇资产）：
-	// 重播时引擎会新建蒙太奇实例，从权重 0 按 HitReactBlendTime 淡入，
-	// 与旧实例（OnHitEventWhileActive 里 Montage_Stop）的淡出形成交叉过渡
+	// 重触发时新实例从权重 0 按 HitReactBlendTime 淡入，
+	// 旧实例被同组规则以相同混合设置淡出，形成交叉过渡
 	Anim->Montage_PlayWithBlendIn(MontageToPlay, FAlphaBlendArgs(HitReactBlendTime), 1.f);
 
 	if (Payload && IsValid(Payload->Instigator) && IsValid(Payload->Target))
@@ -68,12 +60,6 @@ void UFT_HitReactAbility::PlayReactMontage(UAnimInstance* Anim, UAnimMontage* Mo
 			Payload->Target->GetActorRotation());
 		const FName SectionName = UFT_HitReactFunctionLibrary::GetHitReactSectionNameByFVector(Dir);
 		Anim->Montage_JumpToSection(SectionName);
-		
-		// 调试：显示调用堆栈
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, 
-			FString::Printf(TEXT("PlayReactMontage: %s, Time: %.3f"), 
-				*SectionName.ToString(), 
-				GetWorld() ? GetWorld()->GetTimeSeconds() : -1.f));
 	}
 
 	// 绑定该蒙太奇的结束回调：播放完/被打断都会触发 → 结束能力
@@ -82,69 +68,13 @@ void UFT_HitReactAbility::PlayReactMontage(UAnimInstance* Anim, UAnimMontage* Mo
 	Anim->Montage_SetEndDelegate(EndedDelegate, MontageToPlay);
 }
 
-void UFT_HitReactAbility::OnHitEventWhileActive(FGameplayTag EventTag, const FGameplayEventData* Payload)
-{
-	// 重复事件已在攻击方按目标去重（UFT_AttackGamePlayAbility::SettledTargets），
-	// 这里收到的每个 Hit.* 事件都对应一次真实命中，直接重播受击动画
-	UAnimInstance* Anim = nullptr;
-	UAnimMontage* MontageToPlay = nullptr;
-	const FGameplayAbilityActorInfo* ActorInfo = GetCurrentActorInfo();
-	if (ActorInfo && ActorInfo->AvatarActor.IsValid())
-	{
-		if (USkeletalMeshComponent* Mesh = ActorInfo->AvatarActor->FindComponentByClass<USkeletalMeshComponent>())
-			Anim = Mesh->GetAnimInstance();
-		MontageToPlay = GetReactMontage(ActorInfo->AvatarActor.Get());
-	}
-	if (!Anim || !MontageToPlay)
-		return;
-
-	// 解绑旧结束回调，避免停掉旧蒙太奇时触发 EndAbility 提前结束能力
-	if (CurrentReactMontage)
-	{
-		FOnMontageEnded EmptyEndedDelegate;
-		Anim->Montage_SetEndDelegate(EmptyEndedDelegate, CurrentReactMontage);
-		// 旧动画用小过渡淡出，与新动画的淡入形成交叉过渡
-		Anim->Montage_Stop(HitReactBlendTime, CurrentReactMontage);
-	}
-
-	// 按新的命中方向重播
-	PlayReactMontage(Anim, MontageToPlay, Payload);
-}
-
-FGameplayTagContainer UFT_HitReactAbility::CollectTriggerEventTags() const
-{
-	FGameplayTagContainer Tags;
-	for (const FAbilityTriggerData& Trigger : AbilityTriggers)
-	{
-		if (Trigger.TriggerSource == EGameplayAbilityTriggerSource::GameplayEvent)
-		{
-			Tags.AddTag(Trigger.TriggerTag);
-		}
-	}
-	return Tags;
-}
-
-void UFT_HitReactAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
-                                     const FGameplayAbilityActorInfo* ActorInfo,
-                                     const FGameplayAbilityActivationInfo ActivationInfo,
-                                     bool bReplicateEndAbility, bool bWasCancelled)
-{
-	// 移除播放期间的命中事件监听
-	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
-	{
-		const FGameplayTagContainer TriggerTags = CollectTriggerEventTags();
-		if (!TriggerTags.IsEmpty())
-		{
-			ASC->RemoveGameplayEventTagContainerDelegate(TriggerTags, HitEventHandle);
-		}
-		HitEventHandle.Reset();
-	}
-
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-}
-
 void UFT_HitReactAbility::OnReactMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
+	// 重触发后旧蒙太奇实例的结束回调会迟到（它被打断时新激活已在播放）：
+	// 只响应当前蒙太奇，旧实例的回调直接忽略，否则会误结束新激活
+	if (Montage != CurrentReactMontage)
+		return;
+
 	const FGameplayAbilityActorInfo* ActorInfo = GetCurrentActorInfo();
 	if (!ActorInfo)
 		return;
