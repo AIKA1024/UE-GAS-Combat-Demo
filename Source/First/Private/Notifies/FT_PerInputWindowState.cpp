@@ -8,8 +8,9 @@ void UFT_PerInputWindowState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
                                      float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
-
-	if (UFT_ComboComponent* Combo = MeshComp->GetOwner()->FindComponentByClass<UFT_ComboComponent>())
+	AActor* Owner = MeshComp->GetOwner();
+	if (!Owner) return;
+	if (UFT_ComboComponent* Combo = Owner->FindComponentByClass<UFT_ComboComponent>())
 		Combo->SetPerInputOpen(true);
 }
 
@@ -17,7 +18,8 @@ void UFT_PerInputWindowState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 	const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
-
-	if (UFT_ComboComponent* Combo = MeshComp->GetOwner()->FindComponentByClass<UFT_ComboComponent>())
+	AActor* Owner = MeshComp->GetOwner();
+	if (!Owner) return;
+	if (UFT_ComboComponent* Combo = Owner->FindComponentByClass<UFT_ComboComponent>())
 		Combo->SetPerInputOpen(false);
 }

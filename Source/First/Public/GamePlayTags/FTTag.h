@@ -65,6 +65,9 @@ namespace FTTag
 
     namespace Events
     {
+        /** 通用攻击命中事件标签（玩家和敌人共用） */
+        UE_DECLARE_GAMEPLAY_TAG_EXTERN(AttackHit)
+
         namespace Hit
         {
             /** 普通受击：目标未处于霸体（未出招或韧性为 0） */
@@ -75,11 +78,6 @@ namespace FTTag
 
             /** 韧性破：韧性被这一击打空，打断施法 + 完整受击 */
             UE_DECLARE_GAMEPLAY_TAG_EXTERN(Break)
-        }
-
-        namespace Player
-        {
-            UE_DECLARE_GAMEPLAY_TAG_EXTERN(PrimaryTraceHit)
         }
     }
 }

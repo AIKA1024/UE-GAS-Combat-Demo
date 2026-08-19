@@ -59,10 +59,7 @@ namespace FTTag
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(Break, "FFTag.Event.Hit.Break", "Tag for Poise Break Hit")
 		}
 
-		namespace Player
-		{
-			UE_DEFINE_GAMEPLAY_TAG_COMMENT(PrimaryTraceHit, "FFTag.Event.Player.PrimaryTraceHit",
-			                               "Tag for the PrimaryTraceHit of Player")
-		}
+		// 通用攻击命中事件标签（玩家和敌人共用）
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(AttackHit, "FFTag.Event.AttackHit", "Tag for Attack Hit Event (shared by player and enemy)")
 	}
 }

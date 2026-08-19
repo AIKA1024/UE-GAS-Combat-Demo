@@ -58,4 +58,7 @@ private:
 	/** 当前正在播放的受击蒙太奇（重播时用于解绑/停止旧动画） */
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> CurrentReactMontage;
+
+	/** 上次处理的事件时间戳，防止同一事件重复触发 */
+	float LastProcessedEventTime = -1.f;
 };

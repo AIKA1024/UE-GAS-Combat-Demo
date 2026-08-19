@@ -18,18 +18,13 @@ void UFT_HitReactAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	// 播放中再次命中 → 重播受击动画：监听本能力的事件触发器 tag
-	//（能力激活态下 GAS 的 Spec->IsActive() 会拒绝再次激活，必须自己在播放期间监听命中）
-	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
+	// 记录当前时间戳，防止同一事件重复触发
+	if (UWorld* World = GetWorld())
 	{
-		const FGameplayTagContainer TriggerTags = CollectTriggerEventTags();
-		if (!TriggerTags.IsEmpty())
-		{
-			HitEventHandle = ASC->AddGameplayEventTagContainerDelegate(
-				TriggerTags, FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnHitEventWhileActive));
-		}
+		LastProcessedEventTime = World->GetTimeSeconds();
 	}
 
+	// 先播放蒙太奇，再注册事件监听
 	UAnimInstance* Anim = nullptr;
 	UAnimMontage* MontageToPlay = nullptr;
 	if (ActorInfo && ActorInfo->AvatarActor.IsValid())
@@ -47,6 +42,19 @@ void UFT_HitReactAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	{
 		// 没取到蒙太奇（角色没配/子类没回退）：仅执行打断/封锁逻辑后立即结束
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		return;
+	}
+
+	// 播放中再次命中 → 重播受击动画：监听本能力的事件触发器 tag
+	//（能力激活态下 GAS 的 Spec->IsActive() 会拒绝再次激活，必须自己在播放期间监听命中）
+	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
+	{
+		const FGameplayTagContainer TriggerTags = CollectTriggerEventTags();
+		if (!TriggerTags.IsEmpty())
+		{
+			HitEventHandle = ASC->AddGameplayEventTagContainerDelegate(
+				TriggerTags, FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnHitEventWhileActive));
+		}
 	}
 }
 
@@ -65,7 +73,12 @@ void UFT_HitReactAbility::PlayReactMontage(UAnimInstance* Anim, UAnimMontage* Mo
 			Payload->Target->GetActorRotation());
 		const FName SectionName = UFT_HitReactFunctionLibrary::GetHitReactSectionNameByFVector(Dir);
 		Anim->Montage_JumpToSection(SectionName);
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("%s"), *SectionName.ToString()));
+		
+		// 调试：显示调用堆栈
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, 
+			FString::Printf(TEXT("PlayReactMontage: %s, Time: %.3f"), 
+				*SectionName.ToString(), 
+				GetWorld() ? GetWorld()->GetTimeSeconds() : -1.f));
 	}
 
 	// 绑定该蒙太奇的结束回调：播放完/被打断都会触发 → 结束能力
@@ -76,6 +89,18 @@ void UFT_HitReactAbility::PlayReactMontage(UAnimInstance* Anim, UAnimMontage* Mo
 
 void UFT_HitReactAbility::OnHitEventWhileActive(FGameplayTag EventTag, const FGameplayEventData* Payload)
 {
+	// 防止同一事件重复触发：检查时间戳（同一帧内的事件忽略）
+	if (UWorld* World = GetWorld())
+	{
+		const float CurrentTime = World->GetTimeSeconds();
+		// 如果时间差小于一帧（约0.016秒），认为是同一事件
+		if (CurrentTime - LastProcessedEventTime < 0.02f)
+		{
+			return;
+		}
+		LastProcessedEventTime = CurrentTime;
+	}
+
 	UAnimInstance* Anim = nullptr;
 	UAnimMontage* MontageToPlay = nullptr;
 	const FGameplayAbilityActorInfo* ActorInfo = GetCurrentActorInfo();

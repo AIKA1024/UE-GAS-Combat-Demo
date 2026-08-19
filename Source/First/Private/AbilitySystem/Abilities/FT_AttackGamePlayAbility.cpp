@@ -35,7 +35,7 @@ void UFT_AttackGamePlayAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 		// 监听攻击命中事件：命中目标后做伤害 + 韧性判定
 		FGameplayTagContainer TagFilter;
-		TagFilter.AddTag(FTTag::Events::Player::PrimaryTraceHit);
+		TagFilter.AddTag(FTTag::Events::AttackHit);
 		AttackHitEventHandle = ASC->AddGameplayEventTagContainerDelegate(
 			TagFilter, FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::HandleAttackHitEvent));
 	}
@@ -54,7 +54,7 @@ void UFT_AttackGamePlayAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 			ASC->RemoveLooseGameplayTag(FTTag::Status::SuperArmor);
 		}
 		FGameplayTagContainer TagFilter;
-		TagFilter.AddTag(FTTag::Events::Player::PrimaryTraceHit);
+		TagFilter.AddTag(FTTag::Events::AttackHit);
 		ASC->RemoveGameplayEventTagContainerDelegate(TagFilter, AttackHitEventHandle);
 		AttackHitEventHandle.Reset();
 	}
@@ -64,7 +64,7 @@ void UFT_AttackGamePlayAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 void UFT_AttackGamePlayAbility::HandleAttackHitEvent(FGameplayTag EventTag, const FGameplayEventData* Payload)
 {
-	if (!Payload || !EventTag.MatchesTagExact(FTTag::Events::Player::PrimaryTraceHit))
+	if (!Payload || !EventTag.MatchesTag(FTTag::Events::AttackHit))
 		return;
 
 	AActor* Target = const_cast<AActor*>(Payload->Target.Get());

@@ -98,7 +98,7 @@ TArray<FHitResult> UFT_NormalAttackState::PerformSphereTrace(USkeletalMeshCompon
 		}
 	}
 
-	return OutHits;
+		return OutHits;
 }
 
 void UFT_NormalAttackState::SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp)
@@ -124,6 +124,6 @@ void UFT_NormalAttackState::SendEventToActors(TArray<FHitResult> Hits, const USk
 		PayloadData.Target = HitActor;
 		PayloadData.ContextHandle = EffectContext;
 		PayloadData.Instigator = Attacker;
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Attacker, FTTag::Events::Player::PrimaryTraceHit, PayloadData);
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Attacker, FTTag::Events::AttackHit, PayloadData);
 	}
 }
