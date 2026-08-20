@@ -80,4 +80,9 @@ namespace FTTag
             UE_DECLARE_GAMEPLAY_TAG_EXTERN(Break)
         }
     }
+
+    namespace Data
+    {
+        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage)
+    }
 }

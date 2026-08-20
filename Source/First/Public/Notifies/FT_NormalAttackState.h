@@ -14,7 +14,6 @@ class FIRST_API UFT_NormalAttackState : public UAnimNotifyState
 	GENERATED_BODY()
 
 public:
-	
 	UPROPERTY(EditAnywhere, Category="First|Damage")
 	float DamageMultiplier = 1.0f;
 	
@@ -39,7 +38,7 @@ public:
 
 private:
 	TArray<FHitResult> PerformSphereTrace(USkeletalMeshComponent* MeshComp);
-	static void SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp);
+	void SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp) const;
 
 	/**
 	 * 本次 notify 窗口内已命中的对象（按 MeshComp 区分，多个角色共用同一 notify 资源时互不干扰）。

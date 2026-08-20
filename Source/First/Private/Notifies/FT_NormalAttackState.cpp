@@ -2,10 +2,11 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "KismetTraceUtils.h"
+#include "AbilitySystem/FT_AttributeSet.h"
 #include "GamePlayTags/FTTag.h"
 
 void UFT_NormalAttackState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
-	float TotalDuration, const FAnimNotifyEventReference& EventReference)
+                                        float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 	// 本次攻击窗口开始：清空命中记录 → 每招对每个对象只命中一次
@@ -15,7 +16,7 @@ void UFT_NormalAttackState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimS
 }
 
 void UFT_NormalAttackState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
-                                          float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
+                                       float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);
 	const auto HitResults = PerformSphereTrace(MeshComp);
@@ -23,7 +24,7 @@ void UFT_NormalAttackState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSe
 }
 
 void UFT_NormalAttackState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
-	const FAnimNotifyEventReference& EventReference)
+                                      const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 	// 窗口结束：清理该角色的命中记录与上一帧位置
@@ -45,7 +46,7 @@ TArray<FHitResult> UFT_NormalAttackState::PerformSphereTrace(USkeletalMeshCompon
 	if (DeltaLen > KINDA_SMALL_NUMBER)
 	{
 		const FVector Dir = Delta / DeltaLen;
-		Start = PrevSocket - Dir * SocketExtensionOffset;   // 沿运动方向两端各留一段缓冲
+		Start = PrevSocket - Dir * SocketExtensionOffset; // 沿运动方向两端各留一段缓冲
 		End = CurrentSocket + Dir * SocketExtensionOffset;
 	}
 	else
@@ -101,10 +102,10 @@ TArray<FHitResult> UFT_NormalAttackState::PerformSphereTrace(USkeletalMeshCompon
 		AlreadyHit.Add(TWeakObjectPtr(Hit.GetActor()));
 	}
 
-		return OutHits;
+	return OutHits;
 }
 
-void UFT_NormalAttackState::SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp)
+void UFT_NormalAttackState::SendEventToActors(TArray<FHitResult> Hits, const USkeletalMeshComponent* MeshComp) const
 {
 	if (!IsValid(MeshComp))
 		return;
@@ -122,11 +123,13 @@ void UFT_NormalAttackState::SendEventToActors(TArray<FHitResult> Hits, const USk
 
 		FGameplayEffectContextHandle EffectContext = AbilitySystem->MakeEffectContext();
 		EffectContext.AddHitResult(Hit);
-
+		
 		FGameplayEventData PayloadData;
 		PayloadData.Target = HitActor;
-		PayloadData.ContextHandle = EffectContext;
 		PayloadData.Instigator = Attacker;
+		PayloadData.ContextHandle = EffectContext;
+		PayloadData.EventMagnitude = DamageMultiplier;
+
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Attacker, FTTag::Events::AttackHit, PayloadData);
 	}
 }

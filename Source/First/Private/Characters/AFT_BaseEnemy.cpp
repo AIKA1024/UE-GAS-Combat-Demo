@@ -10,7 +10,7 @@ AFT_BaseEnemy::AFT_BaseEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComponent = CreateDefaultSubobject<UFT_AbilitySystemComponent>("AbilitySystemComponent");
-	AttributeSet = CreateDefaultSubobject<UFT_AttributeSet>("AttributeSet");
+	AttributeSet = CreateDefaultSubobject<UFT_AttributeSet>("AttributeSet_V2");
 }
 
 void AFT_BaseEnemy::BeginPlay()
@@ -19,7 +19,7 @@ void AFT_BaseEnemy::BeginPlay()
 	GetAbilitySystemComponent()->InitAbilityActorInfo(this, this);
 
 	// GAS 不会自动注册挂在 Pawn 上的 AttributeSet（只自动注册 ASC 的子对象），必须显式挂上
-	GetAbilitySystemComponent()->AddSpawnedAttribute(AttributeSet);
+	// GetAbilitySystemComponent()->AddSpawnedAttribute(AttributeSet);
 
 	GiveStartupAbilities();
 }

@@ -60,6 +60,13 @@ namespace FTTag
 		}
 
 		// 通用攻击命中事件标签（玩家和敌人共用）
-		UE_DEFINE_GAMEPLAY_TAG_COMMENT(AttackHit, "FFTag.Event.AttackHit", "Tag for Attack Hit Event (shared by player and enemy)")
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(AttackHit, "FFTag.Event.AttackHit",
+		                               "Tag for Attack Hit Event (shared by player and enemy)")
+	}
+
+	namespace Data
+	{
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "FFTag.Data.Damage",
+		                               "Used in Set by Caller to pass base damage value. Input should be positive. The final attribute to be deducted (Health/Mana/Stamina, etc.) is determined by the GE's Modifier or Calculation Class. Note: This tag is for data passing ONLY, NOT for state marking. Do NOT use it as a blocking tag for Ability or State.")
 	}
 }

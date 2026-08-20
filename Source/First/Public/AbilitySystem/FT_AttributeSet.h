@@ -22,22 +22,22 @@ public:
 
 	//Health
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
-	FGameplayAttributeData Health;
+	FGameplayAttributeData Health = 100;
 	ATTRIBUTE_ACCESSORS(ThisClass, Health);
 
 	//MaxHealth
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
-	FGameplayAttributeData MaxHealth;
+	FGameplayAttributeData MaxHealth = 100;
 	ATTRIBUTE_ACCESSORS(ThisClass, MaxHealth);
 
 	//Mana
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
-	FGameplayAttributeData Mana;
+	FGameplayAttributeData Mana = 100;
 	ATTRIBUTE_ACCESSORS(ThisClass, Mana);
 
 	//MaxMana
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
-	FGameplayAttributeData MaxMana;
+	FGameplayAttributeData MaxMana = 100;
 	ATTRIBUTE_ACCESSORS(ThisClass, MaxMana);
 
 	//CurrentPoise 当前韧性：出招时由攻击 GA 授予，受击扣减；归零 = 韧性破，受击可打断施法
@@ -51,6 +51,6 @@ public:
 	ATTRIBUTE_ACCESSORS(ThisClass, MaxPoise);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes | Combat")
-	FGameplayAttributeData Damage;
-	ATTRIBUTE_ACCESSORS(UFT_AttributeSet, Damage);
+	FGameplayAttributeData AttackPower = 10;
+	ATTRIBUTE_ACCESSORS(UFT_AttributeSet, AttackPower);
 };
