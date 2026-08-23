@@ -5,6 +5,7 @@ namespace FTTag
 	namespace Window
 	{
 		UE_DEFINE_GAMEPLAY_TAG(Combo, "FFTag.Windows.Combo")
+		UE_DEFINE_GAMEPLAY_TAG(Cancelable, "FFTag.Windows.Cancelable")
 	}
 
 	namespace Combo
@@ -48,6 +49,7 @@ namespace FTTag
 		UE_DEFINE_GAMEPLAY_TAG(FTTag::Status::Chasing, "FFTag.Status.Chasing");
 		UE_DEFINE_GAMEPLAY_TAG(FTTag::Status::Investigate, "FFTag.Status.Investigate");
 		UE_DEFINE_GAMEPLAY_TAG(FTTag::Status::Patrol, "FFTag.Status.Patrol");
+		UE_DEFINE_GAMEPLAY_TAG(FTTag::Status::BlockMovement, "FFTag.Status.BlockMovement");
 	}
 
 	namespace Events

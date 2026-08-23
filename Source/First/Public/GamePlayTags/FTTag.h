@@ -7,7 +7,8 @@ namespace FTTag
 {
     namespace Window
     {
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo)
+        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo) //连击输入窗口
+        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cancelable) //允许打断动画窗口
     }
     
     namespace Combo
@@ -61,6 +62,9 @@ namespace FTTag
 
         /** AI正在巡逻 */
         UE_DECLARE_GAMEPLAY_TAG_EXTERN(Patrol)
+        
+        /** 阻断移动输入（攻击前摇/命中判定期间挂在身上） */
+        UE_DECLARE_GAMEPLAY_TAG_EXTERN(BlockMovement)   // 新增
     }
 
     namespace Events

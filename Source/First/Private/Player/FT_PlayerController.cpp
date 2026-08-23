@@ -3,11 +3,13 @@
 #include "AbilitySystem/Combat/UFT_ComboComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/Character.h"
 #include "GamePlayTags/FTTag.h"
 
+class IAbilitySystemInterface;
 class UAbilitySystemComponent;
 class UEnhancedInputLocalPlayerSubsystem;
 
@@ -48,6 +50,18 @@ void AFT_PlayerController::StopJumping()
 
 void AFT_PlayerController::Move(const FInputActionValue& Value)
 {
+	IAbilitySystemInterface* Interface = Cast<IAbilitySystemInterface>(GetPawn());
+	auto ASC = Interface->GetAbilitySystemComponent();
+	if (!ASC) return;
+	
+	if (ASC->HasMatchingGameplayTag(FTTag::Window::Cancelable))
+	{
+		FGameplayTagContainer AttackTags;
+		AttackTags.AddTag(FTTag::Abilities::Primary);
+		AttackTags.AddTag(FTTag::Abilities::Secondary);
+		ASC->CancelAbilities(&AttackTags);
+	}
+
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 	const FRotator YawRotation(0.f, GetControlRotation().Yaw, 0.f);
 	const FVector ForwardVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
