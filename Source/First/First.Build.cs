@@ -8,7 +8,9 @@ public class First : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(["Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTags", "GameplayTasks", "AIModule"
+		PublicDependencyModuleNames.AddRange([
+			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTags",
+			"GameplayTasks", "AIModule", "UMG"
 		]);
 
 		PrivateDependencyModuleNames.AddRange([]);

@@ -33,6 +33,10 @@ public:
 	float Damage = 0.f;
 
 protected:
+	/** 正式伤害结算的 GameplayEffect 类型 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "First|Damage")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
+	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,

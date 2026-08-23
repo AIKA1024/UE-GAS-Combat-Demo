@@ -2,6 +2,8 @@
 
 #include "AbilitySystem/FT_AbilitySystemComponent.h"
 #include "AbilitySystem/FT_AttributeSet.h"
+#include "Components/Widget.h"
+#include "Components/WidgetComponent.h"
 
 
 // Sets default values
@@ -10,7 +12,9 @@ AFT_BaseEnemy::AFT_BaseEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComponent = CreateDefaultSubobject<UFT_AbilitySystemComponent>("AbilitySystemComponent");
-	AttributeSet = CreateDefaultSubobject<UFT_AttributeSet>("AttributeSet_V2");
+	AttributeSet = CreateDefaultSubobject<UFT_AttributeSet>("AttributeSet");
+	HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBarWidget->SetupAttachment(RootComponent);
 }
 
 void AFT_BaseEnemy::BeginPlay()

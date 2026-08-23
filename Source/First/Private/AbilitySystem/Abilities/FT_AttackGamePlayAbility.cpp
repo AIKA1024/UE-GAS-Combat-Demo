@@ -67,31 +67,59 @@ void UFT_AttackGamePlayAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 void UFT_AttackGamePlayAbility::HandleAttackHitEvent(FGameplayTag EventTag, const FGameplayEventData* Payload)
 {
-	if (!Payload || !EventTag.MatchesTag(FTTag::Events::AttackHit))
-		return;
+    if (!Payload || !EventTag.MatchesTag(FTTag::Events::AttackHit))
+        return;
 
-	AActor* Target = const_cast<AActor*>(Payload->Target.Get());
-	AActor* Instigator = const_cast<AActor*>(Payload->Instigator.Get());
-	if (!Target)
-		return;
+    AActor* Target = const_cast<AActor*>(Payload->Target.Get());
+    AActor* Instigator = const_cast<AActor*>(Payload->Instigator.Get());
+    if (!Target)
+        return;
 
-	// 同一目标本次激活内只结算一次：同帧重复 AttackHit（多组件命中/多 Mesh 命中等）在此合并，
-	// 避免伤害与受击事件（ProcessHit）被重复触发
-	if (SettledTargets.Contains(Target))
-		return;
-	SettledTargets.Add(Target);
+    // 1. 同一目标本次激活内只结算一次
+    if (SettledTargets.Contains(Target))
+        return;
+    SettledTargets.Add(Target);
 
-	// 生命伤害（占位实现：直接扣属性。后续建议替换为正式伤害 GameplayEffect + 减伤/护甲管线）
-	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target))
-	{
-		if (Damage > 0.f)
-		{
-			const FGameplayAttribute HealthAttr = UFT_AttributeSet::GetHealthAttribute();
-			const float Health = TargetASC->GetNumericAttribute(HealthAttr);
-			TargetASC->SetNumericAttributeBase(HealthAttr, FMath::Max(0.f, Health - Damage));
-		}
-	}
+    UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo();
+    UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
 
-	// 韧性判定 + 受击事件分流
-	UFT_HitReactFunctionLibrary::ProcessHit(Instigator, Target, PoiseDamage);
+    // 2. 正式伤害 GameplayEffect 结算管线
+    if (SourceASC && TargetASC && DamageEffectClass)
+    {
+        // 从 Source 身上读取攻击力
+        bool bFound = false;
+        const float AttackPower = SourceASC->GetGameplayAttributeValue(UFT_AttributeSet::GetAttackPowerAttribute(), bFound);
+        const float FinalAttackPower = bFound ? AttackPower : 0.0f;
+
+        // 计算最终伤害数值 (AttackPower * EventMagnitude * -1)
+        const float EventMagnitude = Payload->EventMagnitude;
+        const float FinalDamage = FinalAttackPower * EventMagnitude * -1.0f;
+
+        // 构建 EffectContext（挂载施法者与来源信息）
+        FGameplayEffectContextHandle ContextHandle = SourceASC->MakeEffectContext();
+        ContextHandle.AddInstigator(Instigator, GetAvatarActorFromActorInfo());
+
+        // 创建 Spec
+        const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(
+            DamageEffectClass,
+            GetAbilityLevel(),
+            ContextHandle
+        );
+
+        if (SpecHandle.IsValid())
+        {
+            // 通过 SetByCaller 传入伤害 Tag 与计算出的负数数值
+            UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+                SpecHandle,
+                FTTag::Data::Damage,
+                FinalDamage
+            );
+
+            // 应用给目标的 ASC
+            SourceASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
+        }
+    }
+
+    // 3. 韧性判定 + 受击事件分流
+    UFT_HitReactFunctionLibrary::ProcessHit(Instigator, Target, PoiseDamage);
 }

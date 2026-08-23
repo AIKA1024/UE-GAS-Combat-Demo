@@ -8,6 +8,7 @@
 #include "AbilitySystem/Combat/Config/CombatAnimationData.h"
 #include "AFT_BaseEnemy.generated.h"
 
+class UWidgetComponent;
 class AFT_PlayerCharacter;
 class UAIPerceptionComponent;
 class UFT_AbilitySystemComponent;
@@ -23,11 +24,14 @@ public:
 	AFT_BaseEnemy();
 	virtual void BeginPlay() override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	virtual FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(2); }// UAIPerceptionComponent队伍
+	virtual FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(2); } // UAIPerceptionComponent队伍
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
 	FFT_CombatAnimationData CombatAnimationData;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBarWidget;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category="First|Ability")
