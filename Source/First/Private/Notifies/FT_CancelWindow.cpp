@@ -12,11 +12,9 @@ void UFT_CancelWindow::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequen
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
-	if (IAbilitySystemInterface* Owner = Cast<IAbilitySystemInterface>(MeshComp->GetOwner()))
-	{
-		auto ASC = Owner->GetAbilitySystemComponent();
-		ASC->AddLooseGameplayTag(FTTag::Window::Cancelable);
-	}
+	if (const IAbilitySystemInterface* Owner = Cast<IAbilitySystemInterface>(MeshComp->GetOwner()))
+		if (const auto ASC = Owner->GetAbilitySystemComponent())
+			ASC->AddLooseGameplayTag(FTTag::Window::Cancelable);
 }
 
 void UFT_CancelWindow::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
@@ -24,9 +22,7 @@ void UFT_CancelWindow::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequence
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 
-	if (IAbilitySystemInterface* Owner = Cast<IAbilitySystemInterface>(MeshComp->GetOwner()))
-	{
-		auto ASC = Owner->GetAbilitySystemComponent();
-		ASC->RemoveLooseGameplayTag(FTTag::Window::Cancelable);
-	}
+	if (const IAbilitySystemInterface* Owner = Cast<IAbilitySystemInterface>(MeshComp->GetOwner()))
+		if (const auto ASC = Owner->GetAbilitySystemComponent())
+			ASC->RemoveLooseGameplayTag(FTTag::Window::Cancelable);
 }
