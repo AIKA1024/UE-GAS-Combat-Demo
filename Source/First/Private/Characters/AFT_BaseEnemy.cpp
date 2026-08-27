@@ -2,6 +2,7 @@
 
 #include "AbilitySystem/FT_AbilitySystemComponent.h"
 #include "AbilitySystem/FT_AttributeSet.h"
+#include "AI/FT_EnemyController.h"
 #include "Components/ActorWidgetComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -18,6 +19,7 @@ AFT_BaseEnemy::AFT_BaseEnemy()
 	AttributeSet = CreateDefaultSubobject<UFT_AttributeSet>("AttributeSet");
 	HealthBarWidget = CreateDefaultSubobject<UActorWidgetComponent>("HealthBar");
 	HealthBarWidget->SetupAttachment(RootComponent);
+	AIControllerClass = AFT_EnemyController::StaticClass();
 }
 
 void AFT_BaseEnemy::HandleHealthAttributeChange(const FOnAttributeChangeData& Data) const

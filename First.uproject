@@ -141,6 +141,10 @@
 		{
 			"Name": "MVVMToolset",
 			"Enabled": true
+		},
+		{
+			"Name": "GameplayStateTree",
+			"Enabled": true
 		}
 	]
 }
