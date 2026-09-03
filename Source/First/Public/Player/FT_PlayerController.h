@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/PlayerController.h"
 #include "InputMappingContext.h"
 #include "FT_PlayerController.generated.h"
@@ -11,9 +12,14 @@ class UInputAction;
 class UFT_ComboComponent;
 
 UCLASS()
-class FIRST_API AFT_PlayerController : public APlayerController
+class FIRST_API AFT_PlayerController : public APlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
+public:
+	virtual FGenericTeamId GetGenericTeamId() const override;
+
+	// 转发态度判定
+	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
 protected:
 	virtual void SetupInputComponent() override;

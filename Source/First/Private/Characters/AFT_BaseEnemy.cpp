@@ -1,5 +1,6 @@
 #include "First/Public/Characters/AFT_BaseEnemy.h"
 
+#include "../../../../../../../../UEEngine/UE_5.8/Engine/Plugins/Runtime/GameplayStateTree/Source/GameplayStateTreeModule/Public/Components/StateTreeComponent.h"
 #include "AbilitySystem/FT_AbilitySystemComponent.h"
 #include "AbilitySystem/FT_AttributeSet.h"
 #include "AI/FT_EnemyController.h"
@@ -18,6 +19,7 @@ AFT_BaseEnemy::AFT_BaseEnemy()
 	AbilitySystemComponent = CreateDefaultSubobject<UFT_AbilitySystemComponent>("AbilitySystemComponent");
 	AttributeSet = CreateDefaultSubobject<UFT_AttributeSet>("AttributeSet");
 	HealthBarWidget = CreateDefaultSubobject<UActorWidgetComponent>("HealthBar");
+	StateTreeComp = CreateDefaultSubobject<UStateTreeComponent>("StateTreeComp");
 	HealthBarWidget->SetupAttachment(RootComponent);
 	AIControllerClass = AFT_EnemyController::StaticClass();
 }

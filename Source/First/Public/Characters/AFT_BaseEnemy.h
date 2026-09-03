@@ -9,6 +9,7 @@
 #include "AbilitySystem/Combat/Config/CombatAnimationData.h"
 #include "AFT_BaseEnemy.generated.h"
 
+class UStateTreeComponent;
 class UActorWidgetComponent;
 class UWidgetComponent;
 class AFT_PlayerCharacter;
@@ -48,6 +49,9 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<APlayerCameraManager> CameraManager;
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UStateTreeComponent> StateTreeComp;
 	
 	void UpdateHealthBarPercent() const;
 };

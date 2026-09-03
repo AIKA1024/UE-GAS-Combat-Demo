@@ -116,3 +116,23 @@ UFT_ComboComponent* AFT_PlayerController::GetComboComponent() const
 		return CurrentPawn->FindComponentByClass<UFT_ComboComponent>();
 	return nullptr;
 }
+
+FGenericTeamId AFT_PlayerController::GetGenericTeamId() const
+{
+	// 如果 Character 实现了接口，直接返回 Character 的队伍 ID
+	if (const IGenericTeamAgentInterface* CharAsTeam = Cast<IGenericTeamAgentInterface>(GetPawn()))
+	{
+		return CharAsTeam->GetGenericTeamId();
+	}
+	return FGenericTeamId::NoTeam;
+}
+
+ETeamAttitude::Type AFT_PlayerController::GetTeamAttitudeTowards(const AActor& Other) const
+{
+	// 委托给当前附身的 Character 去做态度判定
+	if (const IGenericTeamAgentInterface* CharAsTeam = Cast<IGenericTeamAgentInterface>(GetPawn()))
+	{
+		return CharAsTeam->GetTeamAttitudeTowards(Other);
+	}
+	return ETeamAttitude::Neutral;
+}

@@ -10,7 +10,8 @@ public class First : ModuleRules
 
 		PublicDependencyModuleNames.AddRange([
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTags",
-			"GameplayTasks", "AIModule", "UMG"
+			"GameplayTasks", "AIModule", "UMG", "StateTreeModule",
+			"GameplayStateTreeModule"
 		]);
 
 		PrivateDependencyModuleNames.AddRange([]);

@@ -7,86 +7,97 @@ namespace FTTag
 {
     namespace Window
     {
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo) //连击输入窗口
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cancelable) //允许打断动画窗口
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cancelable)
     }
-    
+
     namespace Combo
     {
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(X)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(XX)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(XXX)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(XXXX)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(XY)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(XYX)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(XYY)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(XYYX)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Y)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(X)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(XX)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(XXX)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(XXXX)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(XY)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(XYX)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(XYY)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(XYYX)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Y)
     }
 
     namespace Abilities
     {
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(ActivatedOnGiven)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(BlockHitReact)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Primary)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Secondary)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Roll)
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Death)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(ActivatedOnGiven)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(BlockHitReact)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Primary)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Secondary)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Roll)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Death)
     }
 
     namespace Status
     {
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dead)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dead)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attacking)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(SuperArmor)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(ArmorHit)
 
-        /** 处于攻击招式播放中（攻击 GA 激活时自动挂上） */
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attacking)
+       // ========== AI 运行时行为状态 ==========
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combat)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Chasing)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Investigate)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Patrol)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(BlockMovement)
+    }
 
-        /** 霸体：韧性 > 0 时挂上，受击不被打断（播附加受击） */
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(SuperArmor)
+    namespace AI
+    {
+       namespace Event
+       {
+          // -------------------------------------------------------------------------
+          // 1. 明确威胁/直接战斗组：StateTree 监听父级 (Combat) 即可直接切入追击战斗
+          // -------------------------------------------------------------------------
+          namespace Combat
+          {
+             UE_DECLARE_GAMEPLAY_TAG_EXTERN(SightSpotted)       // 视野看到敌人
+             UE_DECLARE_GAMEPLAY_TAG_EXTERN(HostileNoise)        // 听到开火/破门/呼喊等敌对声音
+             UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageDirect)        // 受到伤害刺激（不论近战/远程）
+             UE_DECLARE_GAMEPLAY_TAG_EXTERN(BumpedThreat)        // 背后碰撞/触碰到敌人
+          }
 
-        /** 正在硬直受击（完整受击/打断施法后） */
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact)
+          // -------------------------------------------------------------------------
+          // 2. 弱威胁/调查组：StateTree 监听父级 (Investigate) 前往该坐标点警戒排查
+          // -------------------------------------------------------------------------
+          namespace Investigate
+          {
+             UE_DECLARE_GAMEPLAY_TAG_EXTERN(SuspiciousNoise)     // 听到碎石/脚步等可疑声响
+             UE_DECLARE_GAMEPLAY_TAG_EXTERN(PredictionArrival)   // 预测感知完成，到达预判脱战点
+          }
 
-        /** 正在播放霸体附加受击 */
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(ArmorHit)
-
-        // ========== AI 行为状态（新增） ==========
-        
-        /** AI正在战斗中（追击或攻击玩家） */
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combat)
-        
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Chasing)     // 追击
-
-        /** AI正在调查声音/可疑位置 */
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Investigate)
-
-        /** AI正在巡逻 */
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Patrol)
-        
-        /** 阻断移动输入（攻击前摇/命中判定期间挂在身上） */
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(BlockMovement)   // 新增
+          // -------------------------------------------------------------------------
+          // 3. 目标丢失/搜寻组：StateTree 监听父级 (Lost) 进入最后已知点搜寻或脱战
+          // -------------------------------------------------------------------------
+          namespace Lost
+          {
+             UE_DECLARE_GAMEPLAY_TAG_EXTERN(SightLost)           // 目标脱离视野/进入掩体
+          }
+       }
     }
 
     namespace Events
     {
-        /** 通用攻击命中事件标签（玩家和敌人共用） */
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(AttackHit)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(AttackHit)
 
-        namespace Hit
-        {
-            /** 普通受击：目标未处于霸体（未出招或韧性为 0） */
-            UE_DECLARE_GAMEPLAY_TAG_EXTERN(Normal)
-
-            /** 霸体附加受击：韧性被扣但未归零 */
-            UE_DECLARE_GAMEPLAY_TAG_EXTERN(Armor)
-
-            /** 韧性破：韧性被这一击打空，打断施法 + 完整受击 */
-            UE_DECLARE_GAMEPLAY_TAG_EXTERN(Break)
-        }
+       namespace Hit
+       {
+          UE_DECLARE_GAMEPLAY_TAG_EXTERN(Normal)
+          UE_DECLARE_GAMEPLAY_TAG_EXTERN(Armor)
+          UE_DECLARE_GAMEPLAY_TAG_EXTERN(Break)
+       }
     }
 
     namespace Data
     {
-        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage)
+       UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage)
     }
 }
