@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "ActorWidget.h"
-#include "Blueprint/UserWidget.h"
 #include "EnemyHealthBar.generated.h"
 
 class UAbilitySystemComponent;

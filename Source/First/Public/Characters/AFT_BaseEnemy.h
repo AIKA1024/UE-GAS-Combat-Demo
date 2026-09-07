@@ -38,6 +38,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UActorWidgetComponent> HealthBarWidget;
+	
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	TObjectPtr<UStateTreeComponent> StateTreeComp;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category="First|Ability")
@@ -49,9 +52,6 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<APlayerCameraManager> CameraManager;
-	
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStateTreeComponent> StateTreeComp;
 	
 	void UpdateHealthBarPercent() const;
 };
