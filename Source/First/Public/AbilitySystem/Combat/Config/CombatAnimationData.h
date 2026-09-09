@@ -19,7 +19,4 @@ struct FFT_CombatAnimationData
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UAnimMontage> StaggerMontage;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UAnimMontage> ArmorHitMontage;
 };

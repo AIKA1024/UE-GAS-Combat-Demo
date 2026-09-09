@@ -19,7 +19,6 @@ AFT_BaseEnemy::AFT_BaseEnemy()
 	AbilitySystemComponent = CreateDefaultSubobject<UFT_AbilitySystemComponent>("AbilitySystemComponent");
 	AttributeSet = CreateDefaultSubobject<UFT_AttributeSet>("AttributeSet");
 	HealthBarWidget = CreateDefaultSubobject<UActorWidgetComponent>("HealthBar");
-	StateTreeComp = CreateDefaultSubobject<UStateTreeComponent>("StateTreeComp");
 	HealthBarWidget->SetupAttachment(RootComponent);
 	AIControllerClass = AFT_EnemyController::StaticClass();
 }

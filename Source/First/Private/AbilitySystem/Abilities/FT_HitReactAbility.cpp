@@ -43,9 +43,10 @@ void UFT_HitReactAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 
 void UFT_HitReactAbility::PlayReactMontage(UAnimInstance* Anim, UAnimMontage* MontageToPlay, const FGameplayEventData* Payload)
 {
-	// 先记录当前蒙太奇：重触发时旧蒙太奇实例会被下面 Play 的组规则打断，
-	// 其迟到的结束回调靠 CurrentReactMontage 甄别（见 OnReactMontageEnded）
-	CurrentReactMontage = MontageToPlay;
+	// 递增令牌：本次激活绑定的蒙太奇实例回调才被认可。
+	// 重触发时旧实例被打断 blend-out 后其结束回调会迟到，且回调只传蒙太奇资产指针
+	// （重触发前后是同一资产，无法靠指针甄别）→ 用令牌挡掉旧实例的迟到回调
+	const uint64 Token = ++ReactMontageToken;
 
 	// 用按次调用的 BlendIn 参数做淡入（不修改蒙太奇资产）：
 	// 重触发时新实例从权重 0 按 HitReactBlendTime 淡入，
@@ -64,17 +65,19 @@ void UFT_HitReactAbility::PlayReactMontage(UAnimInstance* Anim, UAnimMontage* Mo
 
 	// 绑定该蒙太奇的结束回调：播放完/被打断都会触发 → 结束能力
 	FOnMontageEnded EndedDelegate;
-	EndedDelegate.BindUObject(this, &ThisClass::OnReactMontageEnded);
+	EndedDelegate.BindWeakLambda(this, [this, Token](UAnimMontage* Montage, bool bInterrupted)
+	{
+		// 旧实例的迟到回调令牌已过期，直接忽略（否则会提前结束能力 → 硬直期间恢复移动）
+		if (Token != ReactMontageToken)
+			return;
+
+		OnReactMontageEnded(Montage, bInterrupted);
+	});
 	Anim->Montage_SetEndDelegate(EndedDelegate, MontageToPlay);
 }
 
 void UFT_HitReactAbility::OnReactMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	// 重触发后旧蒙太奇实例的结束回调会迟到（它被打断时新激活已在播放）：
-	// 只响应当前蒙太奇，旧实例的回调直接忽略，否则会误结束新激活
-	if (Montage != CurrentReactMontage)
-		return;
-
 	const FGameplayAbilityActorInfo* ActorInfo = GetCurrentActorInfo();
 	if (!ActorInfo)
 		return;

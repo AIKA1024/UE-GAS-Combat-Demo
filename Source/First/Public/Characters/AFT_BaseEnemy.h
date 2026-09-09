@@ -38,15 +38,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UActorWidgetComponent> HealthBarWidget;
-	
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
-	TObjectPtr<UStateTreeComponent> StateTreeComp;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category="First|Ability")
 	TObjectPtr<UFT_AbilitySystemComponent> AbilitySystemComponent;
 
-	/** 敌人属性集（Health/韧性等），与 ASC 同挂 Pawn 上 */
+	/** 敌人属性集（Health 等），与 ASC 同挂 Pawn 上 */
 	UPROPERTY(VisibleAnywhere, Category="First|Ability")
 	TObjectPtr<UFT_AttributeSet> AttributeSet;
 	

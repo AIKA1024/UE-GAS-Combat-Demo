@@ -5,10 +5,11 @@
 #include "FT_HitReact_Stagger.generated.h"
 
 /**
- * 完整受击（普通受击 / 韧性破）：
- *  - 监听 Event.Hit.Normal 与 Event.Hit.Break
+ * 完整受击（普通受击）：
+ *  - 监听 Event.Hit.Normal
  *  - 激活时取消目标正在播放的攻击（CancelAbilitiesWithTag=Attacking）→ 打断施法
  *  - 硬直期间封锁攻击与翻滚（BlockAbilitiesWithTag）
+ *  - 激活期间向 ASC 挂 State.HitReact（ActivationOwnedTags）→ 角色禁移动
  */
 UCLASS()
 class FIRST_API UFT_HitReact_Stagger : public UFT_HitReactAbility

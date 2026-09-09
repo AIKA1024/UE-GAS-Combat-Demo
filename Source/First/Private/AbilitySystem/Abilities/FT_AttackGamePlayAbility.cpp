@@ -9,7 +9,7 @@
 UFT_AttackGamePlayAbility::UFT_AttackGamePlayAbility()
 {
 	// 攻击招式：激活期间 ASC 自动携带 State.Attacking，
-	// 供韧性判定（ProcessHit）与受击 GA 的 Cancel/BlockAbilitiesWithTag 使用
+	// 供受击 GA 的 Cancel/BlockAbilitiesWithTag 使用
 	FGameplayTagContainer AttackTags;
 	AttackTags.AddTag(FTTag::Status::Attacking);
 	SetAssetTags(AttackTags);
@@ -29,14 +29,7 @@ void UFT_AttackGamePlayAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
 	{
-		// 授予本招韧性 + 霸体
-		if (PoiseGranted > 0.f)
-		{
-			ASC->SetNumericAttributeBase(UFT_AttributeSet::GetCurrentPoiseAttribute(), PoiseGranted);
-			ASC->AddLooseGameplayTag(FTTag::Status::SuperArmor);
-		}
-
-		// 监听攻击命中事件：命中目标后做伤害 + 韧性判定
+		// 监听攻击命中事件：命中目标后做伤害结算
 		FGameplayTagContainer TagFilter;
 		TagFilter.AddTag(FTTag::Events::AttackHit);
 		AttackHitEventHandle = ASC->AddGameplayEventTagContainerDelegate(
@@ -50,12 +43,6 @@ void UFT_AttackGamePlayAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 {
 	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
 	{
-		if (PoiseGranted > 0.f)
-		{
-			// 招式结束/被打断：清空韧性、摘霸体
-			ASC->SetNumericAttributeBase(UFT_AttributeSet::GetCurrentPoiseAttribute(), 0.f);
-			ASC->RemoveLooseGameplayTag(FTTag::Status::SuperArmor);
-		}
 		FGameplayTagContainer TagFilter;
 		TagFilter.AddTag(FTTag::Events::AttackHit);
 		ASC->RemoveGameplayEventTagContainerDelegate(TagFilter, AttackHitEventHandle);
@@ -120,6 +107,6 @@ void UFT_AttackGamePlayAbility::HandleAttackHitEvent(FGameplayTag EventTag, cons
         }
     }
 
-    // 3. 韧性判定 + 受击事件分流
-    UFT_HitReactFunctionLibrary::ProcessHit(Instigator, Target, PoiseDamage);
+    // 3. 受击事件
+    UFT_HitReactFunctionLibrary::ProcessHit(Instigator, Target);
 }

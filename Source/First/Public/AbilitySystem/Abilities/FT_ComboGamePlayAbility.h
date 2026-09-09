@@ -7,7 +7,7 @@
 
 /**
  * 连段特化的 GameplayAbility（玩家侧）：
- *  - 继承 UFT_AttackGamePlayAbility：攻击/韧性/伤害/命中判定逻辑都在基类
+ *  - 继承 UFT_AttackGamePlayAbility：攻击/伤害/命中判定逻辑都在基类
  *  - 额外：激活/结束时通知 UFT_ComboComponent 更新连段状态
  * ComboNodeTag 标识本招在连段树里的节点（须与树里该节点的 NodeTag 一致）。
  */

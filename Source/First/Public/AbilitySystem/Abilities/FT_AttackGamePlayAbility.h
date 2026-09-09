@@ -7,10 +7,9 @@
 
 /**
  * 攻击招式基类（玩家连段招与敌人招式共用）：
- *  - 激活时自动携带 State.Attacking（供韧性判定与受击 GA 的 Cancel/Block 使用）
- *  - PoiseGranted > 0：授予韧性 CurrentPoise + 挂 SuperArmor（霸体）
- *  - 激活期间监听 AttackHit 事件，命中目标后做伤害 + 韧性判定
- * 子类在 BP 里配攻击蒙太奇（挂 FT_NormalAttackState 通知）与 PoiseGranted/PoiseDamage/Damage。
+ *  - 激活时自动携带 State.Attacking（供受击 GA 的 Cancel/Block 使用）
+ *  - 激活期间监听 AttackHit 事件，命中目标后做伤害结算
+ * 子类在 BP 里配攻击蒙太奇（挂 FT_NormalAttackState 通知）与 Damage。
  */
 UCLASS()
 class FIRST_API UFT_AttackGamePlayAbility : public UFT_GamePlayAbility
@@ -19,14 +18,6 @@ class FIRST_API UFT_AttackGamePlayAbility : public UFT_GamePlayAbility
 
 public:
 	UFT_AttackGamePlayAbility();
-
-	/** 本招韧性值（霸体值）：>0 时出招期间韧性未打空前受击不打断施法。0 = 无霸体，被打即断 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="First|Poise")
-	float PoiseGranted = 0.f;
-
-	/** 本招每击的韧性伤害：命中目标后从目标韧性中扣除 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="First|Poise")
-	float PoiseDamage = 0.f;
 
 	/** 本招每击的生命伤害（占位：后续建议替换为正式伤害 GameplayEffect + 减伤管线） */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="First|Combat")
@@ -42,7 +33,7 @@ protected:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
-	/** 命中事件回调（AttackHit）：对命中的目标做伤害 + 韧性判定 */
+	/** 命中事件回调（AttackHit）：对命中的目标做伤害结算 */
 	void HandleAttackHitEvent(FGameplayTag EventTag, const FGameplayEventData* Payload);
 
 private:

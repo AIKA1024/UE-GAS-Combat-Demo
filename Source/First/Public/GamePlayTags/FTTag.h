@@ -38,9 +38,7 @@ namespace FTTag
     {
        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dead)
        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attacking)
-       UE_DECLARE_GAMEPLAY_TAG_EXTERN(SuperArmor)
        UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact)
-       UE_DECLARE_GAMEPLAY_TAG_EXTERN(ArmorHit)
 
        // ========== AI 运行时行为状态 ==========
        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combat)
@@ -91,8 +89,6 @@ namespace FTTag
        namespace Hit
        {
           UE_DECLARE_GAMEPLAY_TAG_EXTERN(Normal)
-          UE_DECLARE_GAMEPLAY_TAG_EXTERN(Armor)
-          UE_DECLARE_GAMEPLAY_TAG_EXTERN(Break)
        }
     }
 
