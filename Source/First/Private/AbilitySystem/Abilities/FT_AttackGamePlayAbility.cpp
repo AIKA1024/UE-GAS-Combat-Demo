@@ -1,5 +1,6 @@
 #include "AbilitySystem/Abilities/FT_AttackGamePlayAbility.h"
 
+#include "Perception/AISense_Damage.h"
 #include "AbilitySystem/Combat/UFT_HitReactFunctionLibrary.h"
 #include "AbilitySystem/FT_AttributeSet.h"
 #include "AbilitySystemBlueprintLibrary.h"
@@ -104,6 +105,21 @@ void UFT_AttackGamePlayAbility::HandleAttackHitEvent(FGameplayTag EventTag, cons
 
             // 应用给目标的 ASC
             SourceASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
+        }
+
+        // 上报 AI 伤害感知:AIDamage 感知不会随 GAS 伤害自动触发(引擎在 TakeDamage
+        // 流程中也不会自动上报),必须手动调用 ReportDamageEvent,
+        // BP_EnemyController 的 OnTargetPerceptionUpdated 才能收到 Damage 刺激。
+        // 注意 Instigator 传攻击者(玩家),它就是 FAIStimulus.Instigator → HandelStim 的 StimActor。
+        if (Instigator != nullptr && Target->GetWorld() != nullptr)
+        {
+            UAISense_Damage::ReportDamageEvent(
+                Target->GetWorld(),
+                /*DamagedActor*/ Target,
+                /*Instigator*/ Instigator,
+                /*DamageAmount*/ FMath::Abs(FinalDamage), // Amount 用正数伤害值
+                /*EventLocation*/ Instigator->GetActorLocation(),
+                /*HitLocation*/ Instigator->GetActorLocation());
         }
     }
 
