@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "FT_EnemyController.generated.h"
 
 struct FAIStimulus;
@@ -32,6 +33,7 @@ public:
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 	
 protected:
+	
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable)
