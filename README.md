@@ -2,7 +2,7 @@
 
 基于 **Unreal Engine 5.8** 的第三人称动作战斗原型，核心是一套构建在 **Gameplay Ability System (GAS)** 之上的自研**连段（Combo）系统**。
 
-个人练习项目。`Source/` 下的 C++ 代码，以及 `Content/First/` 下的蓝图、动画蒙太奇、UMG 控件均由本人编写。
+个人练习项目。
 
 ---
 
