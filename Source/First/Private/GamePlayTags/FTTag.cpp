@@ -31,6 +31,11 @@ namespace FTTag
        UE_DEFINE_GAMEPLAY_TAG_COMMENT(Death, "FFTag.Abilities.Death", "Tag for the Death Ability")
     }
 
+    namespace CoolDown
+    {
+       UE_DEFINE_GAMEPLAY_TAG_COMMENT(Primary, "FFTag.CoolDown.Primary", "Tag for tag Primary CoolDown")
+    }
+   
     namespace Status
     {
        UE_DEFINE_GAMEPLAY_TAG_COMMENT(Dead, "FFTag.Status.Dead", "Tag for tag Dead Actor")

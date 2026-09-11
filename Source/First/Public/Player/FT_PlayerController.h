@@ -36,7 +36,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="First|Input|Movement")
 	TObjectPtr<UInputAction> LookAction;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category="First|Input|Movement")
 	TObjectPtr<UInputAction> RollAction;
 	

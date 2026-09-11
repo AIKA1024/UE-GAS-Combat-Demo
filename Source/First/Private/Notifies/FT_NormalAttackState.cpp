@@ -72,6 +72,9 @@ TArray<FHitResult> UFT_NormalAttackState::PerformSphereTrace(USkeletalMeshCompon
 	                                             FCollisionShape::MakeSphere(SphereTraceRadius), Params,
 	                                             ResponseParams);
 
+#if ENABLE_DRAW_DEBUG
+	// DrawDebugSphereTraceMulti 声明在 KismetTraceUtils.h 的 #if ENABLE_DRAW_DEBUG 里，
+	// Shipping 下 ENABLE_DRAW_DEBUG=0 → 必须连同调用一起裁掉，否则 C3861
 	if (bDrawDebug)
 		DrawDebugSphereTraceMulti(World,
 		                          Start,
@@ -83,6 +86,7 @@ TArray<FHitResult> UFT_NormalAttackState::PerformSphereTrace(USkeletalMeshCompon
 		                          FColor::Red,
 		                          FColor::Green,
 		                          5.f);
+#endif
 
 	// 本次 notify 窗口内已命中的对象不重复命中：仅返回并记录新增命中的对象
 	TArray<TWeakObjectPtr<AActor>>& AlreadyHit = HitActorsByMesh.FindOrAdd(MeshComp);

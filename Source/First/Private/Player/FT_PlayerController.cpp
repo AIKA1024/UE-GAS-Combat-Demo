@@ -88,7 +88,6 @@ void AFT_PlayerController::Roll()
 	}
 	ActivateAbility(FTTag::Abilities::Roll);
 }
-
 void AFT_PlayerController::Primary()
 {
 	if (UFT_ComboComponent* Combo = GetComboComponent())

@@ -46,12 +46,28 @@ void AFT_BaseCharacter::OnHitReactTagChanged(FGameplayTag Tag, int32 NewCount)
 
 	if (NewCount > 0)
 	{
-		CachedMovementMode = MoveComp->MovementMode;
-		MoveComp->DisableMovement();
+		if (MoveComp->IsFalling())
+		{
+			// 空中受击：不能 DisableMovement（会切到 MOVE_None，重力/下落模拟全停，人会悬在空中）。
+			// 保持 Falling 让重力继续起作用，只清掉水平速度 → 角色原地垂直下落，落地时由引擎自动转 Walking
+			MoveComp->Velocity.X = 0.f;
+			MoveComp->Velocity.Y = 0.f;
+			bHitReactMovementDisabled = false;
+		}
+		else
+		{
+			CachedMovementMode = MoveComp->MovementMode;
+			MoveComp->DisableMovement();
+			bHitReactMovementDisabled = true;
+		}
 	}
-	else if (CachedMovementMode != MOVE_None)
+	else if (bHitReactMovementDisabled)
 	{
-		MoveComp->SetMovementMode(CachedMovementMode);
+		// 地面硬直结束：恢复受击前的移动模式
+		bHitReactMovementDisabled = false;
+		if (CachedMovementMode != MOVE_None)
+			MoveComp->SetMovementMode(CachedMovementMode);
 	}
+	// 空中受击：从未 Disable 过移动，无需恢复（Falling/落地逻辑一直在正常运行）
 }
 

@@ -40,6 +40,9 @@ private:
 	/** 受击前缓存的移动模式，硬直结束后恢复 */
 	EMovementMode CachedMovementMode = MOVE_Walking;
 
+	/** 本次硬直是否真的执行过 DisableMovement（地面=是，空中=否）；决定恢复分支是否要 SetMovementMode */
+	bool bHitReactMovementDisabled = false;
+
 	/** 完整受击蒙太奇（细节面板可编辑，通过 GetStaggerMontage 读取） */
 	UPROPERTY(EditDefaultsOnly, Category="First|HitReact")
 	TObjectPtr<UAnimMontage> StaggerMontage;

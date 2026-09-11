@@ -40,12 +40,12 @@ void AFT_EnemyController::HandelStim(AActor* StimActor, FAIStimulus Stim)
 	TargetActor = StimActor;
 	TargetLastLoc = StimActor->GetActorLocation();
 	
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		5.0f,
-		FColor::Red,
-		FString::Printf(TEXT("Sense ID: %d"), static_cast<int32>(Stim.Type))
-	);
+	// GEngine->AddOnScreenDebugMessage(
+	// 	-1,
+	// 	5.0f,
+	// 	FColor::Red,
+	// 	FString::Printf(TEXT("Sense ID: %d"), static_cast<int32>(Stim.Type))
+	// );
 	
 	// --------------------------------------------------------------------------
 	// 视觉感知 (Sight)
