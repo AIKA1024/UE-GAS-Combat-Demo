@@ -114,3 +114,27 @@ ShaderCache/
 *.pak.manifest
 *.ucas
 *.utoc
+
+# ============================================
+# 第三方素材包 —— 版权原因不纳入仓库
+# 这些包需要自行从 Fab / Epic 获取，放回对应路径即可正常打开工程
+# ============================================
+Content/ParagonSerath/
+Content/ParagonAurora/
+Content/ParagonKhaimera/
+Content/Fab/
+Content/AdvancedPortalsSystemVFX/
+Content/DynamicFalling/
+Content/RamsterZ_FreeAnims_Volume1/
+Content/Collections/
+Content/Developers/
+
+# ============================================
+# 本地工具 / 个人记录
+# ============================================
+_trash/
+.workbuddy/
+.claude/
+.cursor/
+opencode.json
+.vsconfig
