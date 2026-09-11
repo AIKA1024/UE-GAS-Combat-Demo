@@ -1,60 +1,37 @@
 # ============================================
-# Git LFS - Unreal Engine Binary Assets
+# Git Attributes
+# ============================================
 
-# UE5 core asset files — binary, must use LFS
-*.uasset filter=lfs diff=lfs merge=lfs -text
-*.umap   filter=lfs diff=lfs merge=lfs -text
-*.uexp   filter=lfs diff=lfs merge=lfs -text
-*.ubulk  filter=lfs diff=lfs merge=lfs -text
-*.uptnl  filter=lfs diff=lfs merge=lfs -text
-# Large Binary Media (LFS)
-# Audio
-*.wav    filter=lfs diff=lfs merge=lfs -text
-*.mp3    filter=lfs diff=lfs merge=lfs -text
-*.ogg    filter=lfs diff=lfs merge=lfs -text
-*.flac   filter=lfs diff=lfs merge=lfs -text
-*.aiff   filter=lfs diff=lfs merge=lfs -text
-# Video
-*.mp4    filter=lfs diff=lfs merge=lfs -text
-*.mov    filter=lfs diff=lfs merge=lfs -text
-*.avi    filter=lfs diff=lfs merge=lfs -text
-*.webm   filter=lfs diff=lfs merge=lfs -text
-*.wmv    filter=lfs diff=lfs merge=lfs -text
-# Textures (high-res)
-*.png    filter=lfs diff=lfs merge=lfs -text
-*.jpg    filter=lfs diff=lfs merge=lfs -text
-*.jpeg   filter=lfs diff=lfs merge=lfs -text
-*.bmp    filter=lfs diff=lfs merge=lfs -text
-*.tga    filter=lfs diff=lfs merge=lfs -text
-*.dds    filter=lfs diff=lfs merge=lfs -text
-*.exr    filter=lfs diff=lfs merge=lfs -text
-*.hdr    filter=lfs diff=lfs merge=lfs -text
-*.psd    filter=lfs diff=lfs merge=lfs -text
-*.tif    filter=lfs diff=lfs merge=lfs -text
-*.tiff   filter=lfs diff=lfs merge=lfs -text
-# 3D Models / Animations
-*.fbx    filter=lfs diff=lfs merge=lfs -text
-*.obj    filter=lfs diff=lfs merge=lfs -text
-*.3ds    filter=lfs diff=lfs merge=lfs -text
-*.blend  filter=lfs diff=lfs merge=lfs -text
-*.dae    filter=lfs diff=lfs merge=lfs -text
-*.glb    filter=lfs diff=lfs merge=lfs -text
-*.gltf   filter=lfs diff=lfs merge=lfs -text
-*.usd    filter=lfs diff=lfs merge=lfs -text
-*.usda   filter=lfs diff=lfs merge=lfs -text
-*.usdc   filter=lfs diff=lfs merge=lfs -text
-# Fonts
-*.ttf    filter=lfs diff=lfs merge=lfs -text
-*.otf    filter=lfs diff=lfs merge=lfs -text
-*.woff   filter=lfs diff=lfs merge=lfs -text
-*.woff2  filter=lfs diff=lfs merge=lfs -text
-# Archives
-*.zip    filter=lfs diff=lfs merge=lfs -text
-*.7z     filter=lfs diff=lfs merge=lfs -text
-*.rar    filter=lfs diff=lfs merge=lfs -text
-*.tar    filter=lfs diff=lfs merge=lfs -text
-*.gz     filter=lfs diff=lfs merge=lfs -text
+# ============================================
+# Unreal 资产 —— 二进制，不做行尾转换与 diff
+# ============================================
+*.uasset  binary
+*.umap    binary
+*.uexp    binary
+*.ubulk   binary
+*.uptnl   binary
+
+# ============================================
+# 图片 / 媒体 —— 二进制
+# ============================================
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.bmp   binary
+*.tga   binary
+*.dds   binary
+*.exr   binary
+*.psd   binary
+*.wav   binary
+*.mp3   binary
+*.ogg   binary
+*.mp4   binary
+*.mov   binary
+*.webm  binary
+
+# ============================================
 # Source Code — Text (auto line endings)
+# ============================================
 *.h      text eol=crlf
 *.cpp    text eol=crlf
 *.c      text eol=crlf
@@ -64,7 +41,10 @@
 *.cs     text eol=crlf
 *.inl    text eol=crlf
 *.tpp    text eol=crlf
+
+# ============================================
 # Project / Build Configuration — Text
+# ============================================
 *.uproject  text eol=crlf
 *.uplugin   text eol=crlf
 *.Build.cs  text eol=crlf
@@ -78,9 +58,11 @@
 *.bat       text eol=crlf
 *.sh        text eol=lf
 *.command   text eol=lf
+
+# ============================================
 # Shader Source — Text
+# ============================================
 *.usf     text eol=crlf
 *.ush     text eol=crlf
 *.hlsl    text eol=crlf
 *.glsl    text eol=lf
-Content/First/** !text !filter !merge !diff
